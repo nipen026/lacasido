@@ -1,5 +1,8 @@
 import React from 'react';
-import bannerGif from '../../assets/uper-banner.gif';
+// import bannerGif from '../../assets/uper-banner.gif';
+import inner_banner from '../../assets/inner_banner.jpg';
+import logo from '../../assets/logo.png';
+
 
 const SaleBanner = () => {
   return (
@@ -12,13 +15,17 @@ const SaleBanner = () => {
 
       <div className="w-full py-4 flex justify-center items-center">
         <div className="w-full  px-4">
-          <div className="rounded-xl overflow-hidden md:shadow-md">
+          <div className="relative rounded-xl overflow-hidden md:shadow-md">
             <img
-              src={bannerGif}
+              src={inner_banner}
               alt="Mega Sale Banner"
-              className="w-full h-48 sm:h-auto md:h-auto lg:h-auto object-contain"
+              className="w-full h-[700px]  object-cover"
             />
+            <div className="absolute top-[20%] left-[10%] opacity-[0.5] flex items-center gap-2 text-primary font-bold text-lg ">
+              <img src={logo} alt='logo' className='w-[500px]  object-cover cursor-pointer' />
+            </div>
           </div>
+
         </div>
       </div>
     </>

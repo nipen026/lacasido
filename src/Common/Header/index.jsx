@@ -1,7 +1,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { FaSearch, FaUser, FaShoppingBag, FaTruck, FaHeart, FaBoxOpen } from 'react-icons/fa';
-import logo from '../../assets/vigobee.png';
+import logo from '../../assets/logo.png';
 import { IoMdExit } from 'react-icons/io';
 import { Link, useNavigate } from 'react-router-dom';
 import { GET_ALL_CART, GET_SEARCH_DATA } from '../../api/get';
@@ -68,7 +68,7 @@ const Header = () => {
 
   return (
     <header className="sticky top-0 z-50 bg-secondary  shadow">
-      <div className="bg-primary text-secondary text-sm py-2 overflow-hidden">
+      <div className="bg-primary text-black text-sm py-2 overflow-hidden">
         <div className="animate-marquee whitespace-nowrap flex items-center justify-end gap-6">
           {/* <FaTruck className="inline-block ml-4" /> */}
           <span className="font-medium">🚚 Free Shipping on Orders Over ₹1999</span>
@@ -77,21 +77,25 @@ const Header = () => {
         </div>
       </div>
 
-      <nav className="flex justify-between items-center px-6 py-4">
-        <Link to={'/'}>
-          <div className="flex items-center gap-2 text-primary font-bold text-lg ">
-            <img src={logo} alt='logo' className='w-[50px]  object-contain cursor-pointer' />
-          </div>
-        </Link>
+      <nav className="flex justify-between items-center mx-6 md:mx-12 lg:mx-20 py-4 relative">
+
 
         <ul className={`hidden md:flex gap-6 text-sm  ${showSearch ? 'opacity-0' : 'opacity-100'}`}>
           <li onClick={() => navigate('/productListing?latest=true')} className="hover:text-primary cursor-pointer font-medium text-[16px]">New Arrivals</li>
           <li onClick={() => navigate('/productListing?category=formal_wear')} className="hover:text-primary cursor-pointer font-medium text-[16px]">Formal Wear</li>
           <li onClick={() => navigate('/productListing?category=casual_wear')} className="hover:text-primary cursor-pointer font-medium text-[16px]">Casual Wear</li>
-          <li onClick={() => navigate('/productListing?category=sale')} className="hover:text-primary cursor-pointer font-medium text-[16px]">Sale</li>
         </ul>
-
-        <div className="flex gap-4 items-center  relative">
+        <Link to={'/'}>
+          <div className="flex items-center gap-2 text-primary font-bold text-lg ">
+            <img src={logo} alt='logo' className='w-[150px]  object-cover cursor-pointer' />
+          </div>
+        </Link>
+         <ul className={`hidden md:flex gap-6 text-sm  ${showSearch ? 'opacity-0' : 'opacity-100'}`}>
+          <li onClick={() => navigate('/productListing?latest=true')} className="hover:text-primary cursor-pointer font-medium text-[16px]">New Arrivals</li>
+          <li onClick={() => navigate('/productListing?category=formal_wear')} className="hover:text-primary cursor-pointer font-medium text-[16px]">Formal Wear</li>
+          <li onClick={() => navigate('/productListing?category=casual_wear')} className="hover:text-primary cursor-pointer font-medium text-[16px]">Casual Wear</li>
+        </ul>
+        {/* <div className="flex gap-4 items-center  relative">
           <FaSearch onClick={() => setShowSearch(!showSearch)} className="cursor-pointer hover:text-primary" />
           <FaHeart onClick={() => navigate('/wishlist')} className="cursor-pointer text-red-600 hover:text-red-500" />
 
@@ -126,7 +130,7 @@ const Header = () => {
           ) : (
             <a href="/signin" className="text-sm px-4 py-1 rounded font-semibold border border-primary hover:text-primary hover:bg-white bg-primary text-white transition-all ease-in">Login</a>
           )}
-        </div>
+        </div> */}
       </nav>
 
       <div className={`transition-all duration-500 ${showSearch ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
