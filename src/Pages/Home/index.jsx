@@ -3,9 +3,11 @@ import Header from "../../Common/Header";
 import Banner from "../../Components/Banner";
 import Categories from "../../Components/Categories";
 import FooterBanner from "../../Components/Footerbanner";
+import GemstoneGuide from "../../Components/GemstoneGuide";
 // import FeaturedCategories from "../../Components/FeaturedCategories";
 import NewArrivals from "../../Components/NewArrivals";
 import PremiumCollection from "../../Components/PremiumCollection";
+import ProductsSection from "../../Components/ProductsSection/ProductsSection";
 import ReviewPopup from "../../Components/ReviewPopup";
 import SaleBanner from "../../Components/SaleBanner";
 import TrustBadges from "../../Components/TrustBadges";
@@ -17,11 +19,13 @@ const Home= () =>{
         <Banner/>
         {/* <Categories/> */}
         <SaleBanner/>
+        <ProductsSection/>
         {/* <FeaturedCategories/> */}
-        <NewArrivals/>
+        {/* <NewArrivals/> */}
         <FooterBanner/>
+        <GemstoneGuide />
         {/* <PremiumCollection/> */}
-        <TrustBadges/>
+        {/* <TrustBadges/> */}
         <Footer/>
          {/* <ReviewPopup isOpen={true} /> */}
         </>

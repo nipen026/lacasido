@@ -69,31 +69,78 @@ const Header = () => {
   return (
     <header className="sticky top-0 z-50 bg-secondary  shadow">
       <div className="bg-primary text-black text-sm py-2 overflow-hidden">
+        {/* <div className="animate-marquee whitespace-nowrap flex items-center justify-end gap-6"> */}
+        {/* <FaTruck className="inline-block ml-4" /> */}
         <div className="animate-marquee whitespace-nowrap flex items-center justify-end gap-6">
-          {/* <FaTruck className="inline-block ml-4" /> */}
-          <span className="font-medium">🚚 Free Shipping on Orders Over ₹1999</span>
-          <span className="font-medium">✨ New Collection Launching</span>
-          <span className="font-medium">🛍️ Shop Women’s Wear – Vigobee</span>
+          <span className="font-medium">Premium Diamond Jewelry – Crafted to Perfection , </span>
+          <span className="font-medium">New Diamond Collection Now Live , </span>
+          <span className="font-medium">Explore Rings, Necklaces, Bracelets & More</span>
         </div>
+        {/* </div> */}
       </div>
 
-      <nav className="flex justify-between items-center mx-6 md:mx-12 lg:mx-20 py-4 relative">
+      <nav className="flex justify-between items-center mx-6 md:mx-12 lg:mx-32 py-4 relative">
 
 
         <ul className={`hidden md:flex gap-6 text-sm  ${showSearch ? 'opacity-0' : 'opacity-100'}`}>
-          <li onClick={() => navigate('/productListing?latest=true')} className="hover:text-primary cursor-pointer font-medium text-[16px]">New Arrivals</li>
-          <li onClick={() => navigate('/productListing?category=formal_wear')} className="hover:text-primary cursor-pointer font-medium text-[16px]">Formal Wear</li>
-          <li onClick={() => navigate('/productListing?category=casual_wear')} className="hover:text-primary cursor-pointer font-medium text-[16px]">Casual Wear</li>
+          <li onClick={() => navigate('/')} className="hover:text-primary cursor-pointer font-medium text-[16px]">Home</li>
+          <li onClick={() => navigate('/')} className="hover:text-primary cursor-pointer font-medium text-[16px]">About Us</li>
+          <li onClick={() => navigate('/')} className="hover:text-primary cursor-pointer font-medium text-[16px]">Contact Us</li>
         </ul>
         <Link to={'/'}>
           <div className="flex items-center gap-2 text-primary font-bold text-lg ">
             <img src={logo} alt='logo' className='w-[150px]  object-cover cursor-pointer' />
           </div>
         </Link>
-         <ul className={`hidden md:flex gap-6 text-sm  ${showSearch ? 'opacity-0' : 'opacity-100'}`}>
-          <li onClick={() => navigate('/productListing?latest=true')} className="hover:text-primary cursor-pointer font-medium text-[16px]">New Arrivals</li>
-          <li onClick={() => navigate('/productListing?category=formal_wear')} className="hover:text-primary cursor-pointer font-medium text-[16px]">Formal Wear</li>
-          <li onClick={() => navigate('/productListing?category=casual_wear')} className="hover:text-primary cursor-pointer font-medium text-[16px]">Casual Wear</li>
+        <ul className={`hidden md:flex gap-6 text-sm  ${showSearch ? 'opacity-0' : 'opacity-100'}`}>
+          <li className="group relative cursor-pointer font-medium text-[16px]">
+            Men's
+            <div className="absolute left-0 mt-2 opacity-0 invisible group-hover:visible group-hover:opacity-100
+              transition-all duration-300 translate-y-2 group-hover:translate-y-0
+              bg-white text-black shadow-lg rounded-md w-48 py-2 z-50">
+
+              <Link to="/" className="block px-4 py-2 hover:bg-gray-100">Diamond Ring</Link>
+              <Link to="/" className="block px-4 py-2 hover:bg-gray-100">Bracelet Band</Link>
+              <Link to="/" className="block px-4 py-2 hover:bg-gray-100">Watch</Link>
+              <Link to="/" className="block px-4 py-2 hover:bg-gray-100">Chain</Link>
+              <Link to="/" className="block px-4 py-2 hover:bg-gray-100">Stud Earring</Link>
+              <Link to="/" className="block px-4 py-2 hover:bg-gray-100">Pendent</Link>
+            </div>
+          </li>
+
+
+          {/* LADIES DROPDOWN */}
+          <li className="group relative cursor-pointer font-medium text-[16px]">
+            Ladies's
+            <div className="absolute left-0 mt-2 opacity-0 invisible group-hover:visible group-hover:opacity-100
+            transition-all duration-300 translate-y-2 group-hover:translate-y-0
+            bg-white text-black shadow-lg rounded-md w-48 py-2 z-50">
+
+              <Link to="/" className="block px-4 py-2 hover:bg-gray-100">Diamond Ring</Link>
+              <Link to="/" className="block px-4 py-2 hover:bg-gray-100">Bracelet Band</Link>
+              <Link to="/" className="block px-4 py-2 hover:bg-gray-100">Watch</Link>
+              <Link to="/" className="block px-4 py-2 hover:bg-gray-100">Necklace</Link>
+              <Link to="/" className="block px-4 py-2 hover:bg-gray-100">Earring</Link>
+              <Link to="/" className="block px-4 py-2 hover:bg-gray-100">Pendent</Link>
+            </div>
+          </li>
+
+          {/* DIAMONDS DROPDOWN */}
+          <li className="group relative cursor-pointer font-medium text-[16px]">
+            Diamonds
+              <div className="absolute left-0 mt-2 opacity-0 invisible group-hover:visible group-hover:opacity-100
+                transition-all duration-300 translate-y-2 group-hover:translate-y-0
+                bg-white text-black shadow-lg rounded-md w-40 py-2 z-50">
+
+              <Link to="/" className="block px-4 py-2 hover:bg-gray-100">Diamond Rings</Link>
+              <Link to="/" className="block px-4 py-2 hover:bg-gray-100">Engagement Rings</Link>
+              <Link to="/" className="block px-4 py-2 hover:bg-gray-100">Solitaire</Link>
+              <Link to="/" className="block px-4 py-2 hover:bg-gray-100">Bracelet Band</Link>
+              <Link to="/" className="block px-4 py-2 hover:bg-gray-100">Earrings</Link>
+              <Link to="/" className="block px-4 py-2 hover:bg-gray-100">Pendent</Link>
+            </div>
+          </li>
+
         </ul>
         {/* <div className="flex gap-4 items-center  relative">
           <FaSearch onClick={() => setShowSearch(!showSearch)} className="cursor-pointer hover:text-primary" />

@@ -8,8 +8,8 @@ const SaleBanner = () => {
   return (
     <>
       <div className="my-5">
-        <h1 className="text-center text-2xl md:text-3xl lg:text-4xl font-bold tracking-wide">
-          FASHION PIONEER
+        <h1 className="text-center text-2xl md:text-3xl lg:text-4xl font-serif font-semibold tracking-[3px]">
+          JEWELLERY PIONEER
         </h1>
       </div>
 

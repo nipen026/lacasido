@@ -7,6 +7,10 @@ module.exports = {
   // darkMode: 'class', // Enable class-based dark mode
   theme: {
     extend: {
+      fontFamily: {
+        heading: ["Playfair Display", "serif"],
+        body: ["Inter", "sans-serif"],
+      },
       animation: {
         typing: 'typing 3s steps(30, end), blink .75s step-end infinite',
         blink: 'blink 1s step-end infinite',
@@ -17,7 +21,7 @@ module.exports = {
           from: { width: '0' },
           to: { width: '100%' }
         },
-         shake: {
+        shake: {
           '0%, 100%': { transform: 'translateX(0)' },
           '20%, 60%': { transform: 'translateX(-6px)' },
           '40%, 80%': { transform: 'translateX(6px)' },
@@ -28,9 +32,9 @@ module.exports = {
         }
       },
       colors: {
-        primary: '#ba9e80',    
+        primary: '#e9ddd0',
         secondary: '#ffffff',   // White
-        black: '#232323',       // Black
+        black: '#000',       // Black
         yellow: '#e0af50',       // yellow
       },
     },
