@@ -2,6 +2,7 @@ import React from 'react';
 // import bannerGif from '../../assets/uper-banner.gif';
 import inner_banner from '../../assets/inner_banner.jpg';
 import logo from '../../assets/logo.png';
+import jewel from '../../assets/15.jpg';
 
 
 const SaleBanner = () => {
@@ -21,8 +22,11 @@ const SaleBanner = () => {
               alt="Mega Sale Banner"
               className="w-full h-[700px]  object-cover"
             />
-            <div className="absolute top-[20%] left-[10%] opacity-[0.5] flex items-center gap-2 text-primary font-bold text-lg ">
+            <div className="absolute top-[20%] left-[10%] opacity-[0.8] flex items-center gap-2 text-primary font-bold text-lg ">
               <img src={logo} alt='logo' className='w-[500px]  object-cover cursor-pointer' />
+            </div>
+            <div className="absolute top-[10%] -right-[5%] opacity-[0.2] flex items-center gap-2 text-primary font-bold text-lg ">
+              <img src={jewel} alt='jewel' className='w-[500px] h-[600px] rounded-[50px] object-cover cursor-pointer' />
             </div>
           </div>
 

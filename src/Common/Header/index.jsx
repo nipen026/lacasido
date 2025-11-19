@@ -84,7 +84,7 @@ const Header = () => {
 
         <ul className={`hidden md:flex gap-6 text-sm  ${showSearch ? 'opacity-0' : 'opacity-100'}`}>
           <li onClick={() => navigate('/')} className="hover:text-primary cursor-pointer font-medium text-[16px]">Home</li>
-          <li onClick={() => navigate('/')} className="hover:text-primary cursor-pointer font-medium text-[16px]">About Us</li>
+          <li onClick={() => navigate('/aboutus')} className="hover:text-primary cursor-pointer font-medium text-[16px]">About Us</li>
           <li onClick={() => navigate('/')} className="hover:text-primary cursor-pointer font-medium text-[16px]">Contact Us</li>
         </ul>
         <Link to={'/'}>

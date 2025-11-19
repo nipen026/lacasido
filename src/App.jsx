@@ -18,6 +18,8 @@ import AOS from 'aos';
 import 'react-toastify/dist/ReactToastify.css';
 import 'aos/dist/aos.css';
 import ProtectedRoute from "./ProtectedRoute";
+import AboutUs from "./Pages/AboutUs";
+import ContactUs from "./Pages/ContactUs";
 
 function App() {
   useEffect(() => {
@@ -54,6 +56,8 @@ function App() {
       <Route path="/login/success" element={<LoginSuccess />} />
       <Route path="/returnPolicy" element={<ReturnShippingPolicy />} /> */}
         <Route path="/" element={<Home />} />
+        <Route path="/aboutus" element={<AboutUs />} />
+        <Route path="/contactus" element={<ContactUs />} />
         <Route path="/productDetails/:id" element={<ProductDetailPage />} />
         <Route path="/productListing" element={<ProductListing />} />
         <Route path="/signin" element={<Login />} />

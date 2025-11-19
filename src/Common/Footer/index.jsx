@@ -20,7 +20,7 @@ const Footer = () => {
         <div>
           <h4 className="font-semibold text-black text-lg mb-4">General Links</h4>
           <ul className="space-y-2 text-sm text-black">
-            <li><a href="/about">About Us</a></li>
+            <li><a href="/aboutus">About Us</a></li>
             <li><a href="/collections">Collections</a></li>
             <li><a href="/productListing?category=diamond-ring">Diamond Rings</a></li>
           </ul>
@@ -31,10 +31,10 @@ const Footer = () => {
           <h4 className="font-semibold text-black text-lg mb-4">Contact</h4>
           <ul className="space-y-3 text-sm text-black">
             <li className="flex items-center gap-2">
-              <FaEnvelope /> support@lacasido.com
+              <FaEnvelope /> vav1vaghasiya10@gmail.com
             </li>
             <li className="flex items-center gap-2">
-              <FaPhone /> +91 7984493957
+              <FaPhone /> +91 9727390998
             </li>
           </ul>
         </div>
@@ -43,7 +43,7 @@ const Footer = () => {
         <div>
           <h4 className="font-semibold text-black text-lg mb-4">Follow Us</h4>
           <div className="flex gap-4 text-black text-lg">
-            <a href="#"><FaInstagram /></a>
+            <a href="https://instagram.com/lacasido_jewel"><FaInstagram /></a>
             <a href="#"><FaFacebookF /></a>
             <a href="#"><FaTwitter /></a>
           </div>
