@@ -43,18 +43,7 @@ function App() {
     <>
       <ToastContainer />
       <Routes>
-        {/* <Route path="/" element={<Home/>}/>
-      <Route path="/productDetails/:id" element={<ProductDetailPage/>}/>
-      <Route path="/cart" element={<CartPage/>}/>
-      <Route path="/shipping" element={<ShippingPage/>}/>
-      <Route path="/track" element={<TrackOrderPage/>}/>
-      <Route path="/productListing" element={<ProductListing/>}/>
-      <Route path="/signin" element={<Login/>}/>
-      <Route path="/register" element={<Register/>}/>
-      <Route path="/wishlist" element={<WishlistPage />} />
-      <Route path="/account" element={<MyAccount/>}/>
-      <Route path="/login/success" element={<LoginSuccess />} />
-      <Route path="/returnPolicy" element={<ReturnShippingPolicy />} /> */}
+      
         <Route path="/" element={<Home />} />
         <Route path="/aboutus" element={<AboutUs />} />
         <Route path="/contactus" element={<ContactUs />} />

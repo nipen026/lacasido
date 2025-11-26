@@ -42,24 +42,14 @@ const NewArrivals = () => {
   };
 
   return (
-    <section className="py-10 bg-[#F9FAFB]  transition-colors">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-10 bg-[#fffcf8]  transition-colors">
+      <div className="container  mx-auto px-4 sm:px-6 lg:px-8">
         {/* Heading Row */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
-          <h2 className="text-2xl sm:text-3xl font-semibold text-black ">
-            New Arrivals
+        <div className=" gap-4 mb-8">
+          <h2 className="text-2xl sm:text-3xl text-center font-semibold text-black ">
+            Trending Now
           </h2>
-          <div
-            className="cursor-pointer group"
-            onClick={() => navigate('/productListing?latest=true')}
-          >
-            <p className="flex items-center gap-2 text-black  font-medium">
-              <span className="transition-transform duration-300 group-hover:translate-x-1">
-                View More
-              </span>
-              <FaChevronRight className="transition-transform duration-300 group-hover:translate-x-1" />
-            </p>
-          </div>
+
         </div>
 
         {/* Product Grid */}
@@ -73,7 +63,7 @@ const NewArrivals = () => {
                 data-aos="zoom-in"
                 data-aos-delay={index * 100}
                 key={variant.id}
-                className="group relative bg-white  rounded-xl shadow-md hover:shadow-lg overflow-hidden transition-all"
+                className="group relative    overflow-hidden transition-all"
               >
                 {/* Wishlist Icon */}
                 <div className="absolute top-[-40px] left-4 group-hover:top-4 transition-all duration-300 z-10">
@@ -88,83 +78,98 @@ const NewArrivals = () => {
                       <FaRegHeart size={18} className="text-red-500" />
                     )}
                   </button>
+
+                </div>
+                <div className="absolute top-[-40px] left-4 group-hover:top-4 transition-all duration-300 z-10">
+                  <button
+                    className={`bg-white p-1 md:p-2 rounded-full shadow hover:scale-105 transition-transform ${shake ? "animate-shake" : ""
+                      }`}
+                    onClick={() => handleAddWishList(product)}
+                  >
+                    {isWished ? (
+                      <FaHeart size={18} className="text-red-500" />
+                    ) : (
+                      <FaRegHeart size={18} className="text-red-500" />
+                    )}
+                  </button>
+
                 </div>
 
                 {/* Product Image */}
-                <img
-                  onClick={() => navigate(`productDetails/${product.id}`)}
-                  src={variant.images?.[0]}
-                  alt={product.productName}
-                  className="w-full h-58 sm:h-72 md:h-80 md:object-cover object-contain cursor-pointer transition-transform group-hover:scale-105"
-                />
+                {/* IMAGE CONTAINER WITH HOVER OVERLAY */}
+                <div className="relative w-full h-58 sm:h-72 md:h-80 overflow-hidden">
 
-                <div className="p-4 space-y-2">
-                  {/* Product Name */}
-                  <h3
-                    className="text-lg font-semibold text-black  cursor-pointer"
+                  {/* PRODUCT IMAGE */}
+                  <img
                     onClick={() => navigate(`productDetails/${product.id}`)}
-                  >
-                    {product.productName}
-                  </h3>
+                    src={variant.images?.[0]}
+                    alt={product.productName}
+                    className="w-full h-full object-cover cursor-pointer transition-all duration-300 group-hover:scale-110 
+               group-hover:opacity-0"
+                  />
 
-                  {/* Price */}
+                  {/* HOVER IMAGE (SECOND IMAGE) */}
+                  {variant.images?.[1] && (
+                    <img
+                      src={variant.images?.[1]}
+                      alt="hover"
+                      className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 
+                 transition-opacity duration-300"
+                    />
+                  )}
+
+                  {/* OVERLAY BUTTONS */}
                   <div
-                    className="flex flex-wrap items-center md:gap-4 gap-2 mb-3 cursor-pointer"
-                    onClick={() => navigate(`/productDetails/${product.id}`)}
+                    className="absolute inset-0 flex flex-col items-center justify-end gap-3 
+               bg-black/10 opacity-0 group-hover:opacity-100 
+               transition-all duration-300 "
                   >
-                    {/* Sale Price */}
-                    <span className="text-green-600  text-lg font-bold">
-                      ₹ {variant.salePrice}
-                    </span>
+                    {/* ADD TO CART BUTTON */}
+                    <button
+                      onClick={() => navigate(`productDetails/${product.id}`)}
+                      className="w-full py-2 bg-primary text-black font-semibold shadow 
+                 hover:bg-black hover:text-white transition"
+                    >
+                      ADD TO CART
+                    </button>
 
-                    {/* MRP (strikethrough) */}
-                    <span className="text-gray-500  line-through text-sm">
-                      ₹ {variant.mrp}
-                    </span>
+                    {/* QUICK VIEW BUTTON */}
 
-                    {/* Discount Badge */}
-                    <span className="bg-red-100 text-red-600  px-2 py-0.5 rounded-full text-xs font-semibold">
-                      {Math.round(((variant.mrp - variant.salePrice) / variant.mrp) * 100)}% OFF
-                    </span>
                   </div>
-
-
-                  {/* Color */}
-                  <div
-                    className="flex items-center gap-2 mb-4"
-                    onClick={() => navigate(`productDetails/${product.id}`)}
-                  >
-                    <div
-                      className="w-5 h-5 rounded-full border"
-                      style={{ backgroundColor: variant.color }}
-                    ></div>
-                    <span className="text-xs text-gray-500">Color</span>
-                  </div>
-
-                  {/* Sizes */}
-                  {/* <div className="flex flex-wrap gap-2">
-                    {variant.size.map((sz) => (
-                      <span
-                        key={sz}
-                        className="px-2 py-1 border text-xs rounded text-gray-600 dark:text-gray-300"
-                      >
-                        {sz}
-                      </span>
-                    ))}
-                  </div> */}
-
-                  {/* Add to Cart */}
-                  <button
-                    onClick={() => navigate(`productDetails/${product.id}`)}
-                    className="w-full border border-primary font-semibold text-primary py-2 rounded hover:bg-primary hover:text-white transition"
-                  >
-                    Add to Cart
-                  </button>
                 </div>
+                {/* Product Details */}
+                <div className="p-4 text-center">
+                  <h3>
+                    {product.productName.length > 25
+                      ? product.productName.substring(0, 25) + '...'
+                      : product.productName}
+                  </h3>
+                  <p className=''>
+                    {variant.salePrice ? (
+                      <>
+                        <span className="text-black font-semibold">Rs.{variant.salePrice}.00</span>
+                      
+                      </>
+                    ) : (
+                      <span className="text-black font-semibold">₹{variant.mrp}</span>
+                    )}
+                  </p>
+                  </div>
               </div>
             );
           })}
         </div>
+        <button
+          className="cursor-pointer group border-2 border-black px-10 py-2 mt-8 mx-auto flex items-center gap-2  hover:bg-black hover:text-white  transition"
+          onClick={() => navigate('/productListing?latest=true')}
+        >
+          <p className="flex items-center gap-2  font-medium">
+            <span className="transition-transform duration-300 group-hover:translate-x-1">
+              SHOW MORE
+            </span>
+            <FaChevronRight className="transition-transform duration-300 group-hover:translate-x-1" />
+          </p>
+        </button>
       </div>
     </section>
   );

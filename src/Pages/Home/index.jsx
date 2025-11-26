@@ -21,7 +21,7 @@ const Home= () =>{
         <SaleBanner/>
         <ProductsSection/>
         {/* <FeaturedCategories/> */}
-        {/* <NewArrivals/> */}
+        <NewArrivals/>  
         <FooterBanner/>
         <GemstoneGuide />
         {/* <PremiumCollection/> */}

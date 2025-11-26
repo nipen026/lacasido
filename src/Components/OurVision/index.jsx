@@ -4,10 +4,10 @@ import ring from '../../assets/ring.jpg';
 
 const OurVision = () => {
     return (
-        <div className="flex items-center justify-center space-y-10   bg-white">
+        <div className="flex items-center justify-center  space-y-10   bg-white">
 
             {/* LEFT SECTION */}
-           <div className="flex items-center justify-between gap-[50px] p-10">
+           <div className="flex items-center flex-wrap justify-between gap-[50px] p-10">
              <div className="flex items-center gap-3">
 
                 {/* Large Image */}
