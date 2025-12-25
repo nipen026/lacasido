@@ -354,7 +354,7 @@ const Shipping = () => {
         key: import.meta.env.VITE_RAZORPAY_KEY_ID,
         amount: data.order.amount,
         currency: 'INR',
-        name: 'Vigobee',
+        name: 'Lacasido',
         description: 'Order Payment',
         order_id: data.order.id,
         handler: async function (response) {
@@ -374,7 +374,7 @@ const Shipping = () => {
         },
         prefill: {
           name: formData.firstName + ' ' + formData.lastName,
-          email: 'info@vigobee.com',
+          email: 'info@Lacasido.com',
           contact: formData.phone,
         },
         theme: { color: '#0a4b3c' },

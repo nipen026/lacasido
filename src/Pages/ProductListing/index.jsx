@@ -52,19 +52,19 @@ useEffect(() => {
 
   // --- SEO Auto Generation ---
   const seoTitle = filters.category.length
-    ? `Shop ${filters.category.join(', ')} Online | Vigobee`
-    : 'Trendy Gen-Z Clothing | Vigobee';
+    ? `Shop ${filters.category.join(', ')} Online | Lacasido`
+    : 'Trendy Gen-Z Clothing | Lacasido';
 
   const seoDescription = filters.category.length
-    ? `Discover the best ${filters.category.join(', ')} for Gen-Z. Shop affordable, stylish, and trending outfits online at Vigobee.`
-    : 'Shop Gen-Z inspired fashion at Vigobee. Explore trendy shirts, t-shirts, pants, and more with affordable prices.';
+    ? `Discover the best ${filters.category.join(', ')} for Gen-Z. Shop affordable, stylish, and trending outfits online at Lacasido.`
+    : 'Shop Gen-Z inspired fashion at Lacasido. Explore trendy shirts, t-shirts, pants, and more with affordable prices.';
 
   const seoKeywords = [
     ...(filters.category.length ? filters.category : ['shirts', 't-shirts', 'pants', 'fashion', 'streetwear']),
     'gen-z clothing',
     'trendy outfits',
     'affordable fashion',
-    'vigobee store',
+    'Lacasido store',
   ].join(', ');
 
   return (

@@ -248,7 +248,7 @@ const TrackOrder = () => {
                   <div className="flex items-center gap-2">
                     <FaEnvelope />
                     <span>
-                      Any Issue : {"info@vigobee.com"}
+                      Any Issue : {"info@Lacasido.com"}
                     </span>
                   </div>
                 </div>
@@ -270,7 +270,7 @@ const TrackOrder = () => {
   </div>
   <div className="flex gap-3">
     {/* Contact Support button redirects to email */}
-    <a href="mailto:info@vigobee.com">
+    <a href="mailto:info@Lacasido.com">
       <button className="bg-primary text-white px-4 py-2 rounded hover:bg-opacity-90">
         Contact Support
       </button>

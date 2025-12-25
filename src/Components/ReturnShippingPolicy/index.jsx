@@ -37,23 +37,23 @@ const ReturnShippingPolicy = () => {
     <>
       {/* ✅ SEO tags for this page */}
       <Helmet>
-        <title>Refund & Return Policy | Vigobee Gen-Z Clothing</title>
+        <title>Refund & Return Policy | Lacasido Gen-Z Clothing</title>
         <meta
           name="description"
-          content="Read Vigobee's Refund & Return Policy. Hassle-free returns within 7 days, fast shipping across India, and Gen-Z friendly fashion guaranteed."
+          content="Read Lacasido's Refund & Return Policy. Hassle-free returns within 7 days, fast shipping across India, and Gen-Z friendly fashion guaranteed."
         />
         <meta
           name="keywords"
-          content="refund policy, return policy, shipping policy, Vigobee clothing, Gen-Z fashion store, trendy clothes India, youth streetwear, online shopping returns"
+          content="refund policy, return policy, shipping policy, Lacasido clothing, Gen-Z fashion store, trendy clothes India, youth streetwear, online shopping returns"
         />
-        <meta property="og:title" content="Refund & Return Policy | Vigobee" />
+        <meta property="og:title" content="Refund & Return Policy | Lacasido" />
         <meta
           property="og:description"
-          content="Hassle-free returns within 7 days, free shipping on orders above ₹999, and quick order tracking with Vigobee Gen-Z fashion store."
+          content="Hassle-free returns within 7 days, free shipping on orders above ₹999, and quick order tracking with Lacasido Gen-Z fashion store."
         />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://vigobee.com/return-policy" />
-        <meta property="og:site_name" content="Vigobee" />
+        <meta property="og:url" content="https://Lacasido.com/return-policy" />
+        <meta property="og:site_name" content="Lacasido" />
         <meta property="twitter:card" content="summary_large_image" />
         <meta name="robots" content="index, follow" />
       </Helmet>
@@ -196,7 +196,7 @@ const ReturnShippingPolicy = () => {
           <p>
             For any questions related to your return or shipping, feel free to
             contact us at{" "}
-            <a className="text-primary font-bold underline" href="mailto:info@vigobee.com">contactus@vigobee.com</a>.
+            <a className="text-primary font-bold underline" href="mailto:info@Lacasido.com">contactus@Lacasido.com</a>.
           </p>
         </AccordionSection>
       </div>
