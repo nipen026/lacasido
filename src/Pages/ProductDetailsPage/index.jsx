@@ -8,7 +8,7 @@ const ProductDetailPage = () =>{
         <>
         <Header/>
         <ProductDetail/>
-        <TrustBadges/>
+        {/* <TrustBadges/> */}
         <Footer/>
         </>
     )

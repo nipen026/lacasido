@@ -6,7 +6,7 @@ const token = localStorage.getItem('access-token')
 export const GET_PRODUCT = () => {
   return new Promise((resolve, reject) => {
     axios
-      .get(`${base_url}products/getFilteredProducts?latest=true`)
+      .get(`${base_url}/api/products`)
       .then((res) => resolve(res))
       .catch((err) => reject(err));
   });
@@ -27,7 +27,7 @@ export const GET_PRODUCT_BY_ID = (id) => {
 export const GET_FILTER_PRODUCT = (query) => {
   return new Promise((resolve, reject) => {
     axios
-      .get(`${base_url}products/getFilteredProducts${query}`,{
+      .get(`${base_url}/api/products/by-category/${query}`,{
         headers:{
             Authorization:`Bearer ${token}`
         }

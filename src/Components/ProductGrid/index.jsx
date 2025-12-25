@@ -4,10 +4,10 @@ import ProductCard from '../../Common/ProductCard';
 
 const ProductGrid = ({ products }) => {
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
-      {products.map((product) => (
-        <ProductCard product={product} key={product.id} />
-      ))}
+    <div>
+      {/* {products.map((product) => ( */}
+        <ProductCard products={products} />
+      {/* ))} */}
     </div>
   );
 };

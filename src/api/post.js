@@ -19,7 +19,30 @@ export const LOGIN = (data) => {
       .catch((err) => reject(err));
   });
 };
-
+export const ADD_INQUIRY = (data) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .post(`${base_url}/api/inquiries`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      .then((res) => resolve(res))
+      .catch((err) => reject(err));
+  });
+};
+export const ADD_CONTACT = (data) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .post(`${base_url}/api/contact-us`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      .then((res) => resolve(res))
+      .catch((err) => reject(err));
+  });
+};
 
 export const ADD_CART = (data) =>{
     return new Promise((resolve, reject) => {

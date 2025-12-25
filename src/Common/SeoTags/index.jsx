@@ -4,10 +4,10 @@ import { Helmet } from "react-helmet-async";
 const SeoTags = ({ product }) => {
   if (!product) return null;
 
-  const title = `${product.productName} | Vigobee`;
-  const description = `Buy ${product.productName} from Vigobee. ${product.description?.replace(/<[^>]+>/g, '').slice(0, 160)}...`;
+  const title = `${product.name} | Lacasido`;
+  const description = `Buy ${product.name} from Lacasido. ${product.description?.replace(/<[^>]+>/g, '').slice(0, 160)}...`;
   const keywords = [
-    product.productName,
+    product.name,
     product.category,
     product.subCategory,
     product.brandName,
@@ -21,7 +21,7 @@ const SeoTags = ({ product }) => {
     .filter(Boolean)
     .join(", ");
 
-  const canonical = `https://vigobee.com/productDetails/${product.id}`;
+  const canonical = `https://Lacasido.com/productDetails/${product.id}`;
   const mainImage = product.variants?.[0]?.images?.[0] || "/default-image.jpg";
 
   return (

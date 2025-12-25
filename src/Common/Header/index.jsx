@@ -2,19 +2,20 @@ import React, { useEffect, useRef, useState } from "react";
 import { FaSearch, FaBars, FaTimes } from "react-icons/fa";
 import logo from "../../assets/logo.png";
 import { IoMdExit } from "react-icons/io";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const Header = () => {
   const [showSearch, setShowSearch] = useState(false);
   const [mobileMenu, setMobileMenu] = useState(false);
   const [activeMobileDropdown, setActiveMobileDropdown] = useState(null);
-
+  const [categories, setCategories] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading] = useState(false);
 
   const navigate = useNavigate();
+  const location = useLocation();
+  const currentPath = location.pathname;
   const token = localStorage.getItem("access-token");
-
   const toggleDropdown = (menu) => {
     setActiveMobileDropdown((prev) => (prev === menu ? null : menu));
   };
@@ -37,7 +38,18 @@ const Header = () => {
     }
     return () => (document.body.style.overflow = "");
   }, [mobileMenu]);
-
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await fetch("https://api.lacasidojewellery.com/api/categories");
+        const data = await res.json();
+        setCategories(data.data || []);
+      } catch (error) {
+        console.error("Failed to fetch categories:", error);
+      }
+    };
+    fetchCategories();
+  }, []);
   const handleLogout = () => {
     localStorage.removeItem("access-token");
     window.location.reload();
@@ -73,27 +85,40 @@ const Header = () => {
 
         {/* LEFT MENU (DESKTOP) */}
         <ul
-          className={`hidden md:flex gap-6 text-sm ${showSearch ? "opacity-0" : "opacity-100"}`}
+          className={`hidden md:flex gap-8 text-sm ${showSearch ? "opacity-0" : "opacity-100"
+            }`}
         >
-          <li
-            onClick={() => navigate("/")}
-            className="hover:text-primary cursor-pointer font-medium text-[16px]"
-          >
-            Home
-          </li>
-          <li
-            onClick={() => navigate("/aboutus")}
-            className="hover:text-primary cursor-pointer font-medium text-[16px]"
-          >
-            About Us
-          </li>
-          <li
-            onClick={() => navigate("/contact")}
-            className="hover:text-primary cursor-pointer font-medium text-[16px]"
-          >
-            Contact Us
-          </li>
+          {[
+            { label: "Home", path: "/" },
+            { label: "About Us", path: "/aboutus" },
+            { label: "Contact Us", path: "/contactus" },
+          ].map((item) => {
+            const isActive = currentPath === item.path;
+
+            return (
+              <li
+                key={item.label}
+                onClick={() => navigate(item.path)}
+                className={`
+                  relative cursor-pointer font-medium text-[16px]
+                  transition-colors duration-300
+                  ${isActive ? "text-black" : "text-black"}
+
+                  after:content-['']
+                  after:absolute after:-bottom-1 after:h-[2px] after:bg-black
+                  after:transition-all after:duration-300 after:ease-out
+
+                  ${isActive
+                    ? "after:w-full after:left-0"
+                    : "after:w-0 after:left-1/2 hover:after:w-full hover:after:left-0"
+                  }
+                `} >
+                {item.label}
+              </li>
+            );
+          })}
         </ul>
+
 
         {/* LOGO */}
         <Link to="/">
@@ -101,98 +126,25 @@ const Header = () => {
         </Link>
 
         {/* RIGHT MENU (DESKTOP) */}
-        <ul
-          className={`hidden md:flex gap-6 text-sm ${showSearch ? "opacity-0" : "opacity-100"}`}
-        >
-          {/* MEN DROPDOWN */}
-          <li className="group relative cursor-pointer font-medium text-[16px]">
-            Men's
-            <div
-              className="absolute left-0 mt-2 bg-white shadow-lg rounded-md w-48 py-2 z-50
-              opacity-0 invisible translate-y-4 scale-95
-              group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:scale-100
-              transition-all duration-300 ease-out"
-            >
-              <Link to="/" className="block px-4 py-2 hover:bg-gray-100">
-                Diamond Ring
-              </Link>
-              <Link to="/" className="block px-4 py-2 hover:bg-gray-100">
-                Bracelet Band
-              </Link>
-              <Link to="/" className="block px-4 py-2 hover:bg-gray-100">
-                Watch
-              </Link>
-              <Link to="/" className="block px-4 py-2 hover:bg-gray-100">
-                Chain
-              </Link>
-              <Link to="/" className="block px-4 py-2 hover:bg-gray-100">
-                Stud Earring
-              </Link>
-              <Link to="/" className="block px-4 py-2 hover:bg-gray-100">
-                Pendent
-              </Link>
-            </div>
-          </li>
-
-          {/* LADIES */}
-          <li className="group relative cursor-pointer font-medium text-[16px]">
-            Ladies
-            <div
-              className="absolute left-0 mt-2 bg-white shadow-lg rounded-md w-48 py-2 z-50
-              opacity-0 invisible translate-y-4 scale-95
-              group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:scale-100
-              transition-all duration-300 ease-out"
-            >
-              <Link to="/" className="block px-4 py-2 hover:bg-gray-100">
-                Diamond Ring
-              </Link>
-              <Link to="/" className="block px-4 py-2 hover:bg-gray-100">
-                Bracelet Band
-              </Link>
-              <Link to="/" className="block px-4 py-2 hover:bg-gray-100">
-                Watch
-              </Link>
-              <Link to="/" className="block px-4 py-2 hover:bg-gray-100">
-                Necklace
-              </Link>
-              <Link to="/" className="block px-4 py-2 hover:bg-gray-100">
-                Earring
-              </Link>
-              <Link to="/" className="block px-4 py-2 hover:bg-gray-100">
-                Pendent
-              </Link>
-            </div>
-          </li>
-
-          {/* DIAMONDS */}
-          <li className="group relative cursor-pointer font-medium text-[16px]">
-            Diamonds
-            <div
-              className="absolute left-0 mt-2 bg-white shadow-lg rounded-md w-48 py-2 z-50
-              opacity-0 invisible translate-y-4 scale-95
-              group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:scale-100
-              transition-all duration-300 ease-out"
-            >
-              <Link to="/" className="block px-4 py-2 hover:bg-gray-100">
-                Diamond Rings
-              </Link>
-              <Link to="/" className="block px-4 py-2 hover:bg-gray-100">
-                Engagement Rings
-              </Link>
-              <Link to="/" className="block px-4 py-2 hover:bg-gray-100">
-                Solitaire
-              </Link>
-              <Link to="/" className="block px-4 py-2 hover:bg-gray-100">
-                Bracelet Band
-              </Link>
-              <Link to="/" className="block px-4 py-2 hover:bg-gray-100">
-                Earrings
-              </Link>
-              <Link to="/" className="block px-4 py-2 hover:bg-gray-100">
-                Pendent
-              </Link>
-            </div>
-          </li>
+        <ul className="hidden md:flex gap-6">
+          {categories.map((cat) => (
+            <li key={cat.id} className="group relative cursor-pointer font-medium text-[16px]">
+              {cat.name}
+              {cat.subcategories && cat.subcategories.length > 0 && (
+                <div className="absolute left-0 mt-2 bg-white shadow-lg rounded-md w-48 py-2 z-50
+                opacity-0 invisible translate-y-4 scale-95
+                group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:scale-100
+                transition-all duration-300 ease-out"
+                >
+                  {cat.subcategories.map((sub) => (
+                    <Link key={sub.id} to={`/productListing?category=${cat.id}&subcategory=${sub.id}`} className="block px-4 py-2 hover:bg-gray-100">
+                      {sub.name}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </li>
+          ))}
         </ul>
 
         {/* RIGHT ICONS (MOBILE) */}
@@ -227,84 +179,38 @@ const Header = () => {
           </div>
 
           <ul className="space-y-4 text-lg font-medium">
-            <li onClick={() => { navigate("/"); setMobileMenu(false); }}>Home</li>
-            <li onClick={() => { navigate("/aboutus"); setMobileMenu(false); }}>About Us</li>
-            <li onClick={() => { navigate("/contactus"); setMobileMenu(false); }}>Contact Us</li>
+            {categories.map((cat) => (
+              <li key={cat.id}>
+                <div
+                  className="flex justify-between items-center cursor-pointer"
+                  onClick={() => toggleDropdown(cat.name)}
+                >
+                  <span>{cat.name}</span>
+                  <span>{activeMobileDropdown === cat.name ? "-" : "+"}</span>
+                </div>
 
-            {/* MEN */}
-            <li>
-              <div
-                className="flex justify-between items-center cursor-pointer"
-                onClick={() => toggleDropdown("men")}
-              >
-                <span>Men's</span>
-                <span>{activeMobileDropdown === "men" ? "-" : "+"}</span>
-              </div>
-
-              <div
-                className={`ml-4 space-y-2 text-sm overflow-hidden transition-all duration-300
-                  ${activeMobileDropdown === "men" ? "max-h-96 opacity-100 mt-2" : "max-h-0 opacity-0"}`}
-              >
-                <p><Link to="/">Diamond Ring</Link></p>
-                <p><Link to="/">Bracelet Band</Link></p>
-                <p><Link to="/">Watch</Link></p>
-                <p><Link to="/">Chain</Link></p>
-                <p><Link to="/">Stud Earring</Link></p>
-                <p><Link to="/">Pendent</Link></p>
-              </div>
-            </li>
-
-            {/* LADIES */}
-            <li>
-              <div
-                className="flex justify-between items-center cursor-pointer"
-                onClick={() => toggleDropdown("ladies")}
-              >
-                <span>Ladies</span>
-                <span>{activeMobileDropdown === "ladies" ? "-" : "+"}</span>
-              </div>
-
-              <div
-                className={`ml-4 space-y-2 text-sm overflow-hidden transition-all duration-300
-                  ${activeMobileDropdown === "ladies" ? "max-h-96 opacity-100 mt-2" : "max-h-0 opacity-0"}`}
-              >
-                <p><Link to="/">Diamond Ring</Link></p>
-                <p><Link to="/">Bracelet Band</Link></p>
-                <p><Link to="/">Watch</Link></p>
-                <p><Link to="/">Necklace</Link></p>
-                <p><Link to="/">Earring</Link></p>
-                <p><Link to="/">Pendent</Link></p>
-              </div>
-            </li>
-
-            {/* DIAMONDS */}
-            <li>
-              <div
-                className="flex justify-between items-center cursor-pointer"
-                onClick={() => toggleDropdown("diamonds")}
-              >
-                <span>Diamonds</span>
-                <span>{activeMobileDropdown === "diamonds" ? "-" : "+"}</span>
-              </div>
-
-              <div
-                className={`ml-4 space-y-2 text-sm overflow-hidden transition-all duration-300
-                  ${activeMobileDropdown === "diamonds" ? "max-h-96 opacity-100 mt-2" : "max-h-0 opacity-0"}`}
-              >
-                <p><Link to="/">Diamond Rings</Link></p>
-                <p><Link to="/">Engagement Rings</Link></p>
-                <p><Link to="/">Solitaire</Link></p>
-                <p><Link to="/">Bracelet Band</Link></p>
-                <p><Link to="/">Earrings</Link></p>
-                <p><Link to="/">Pendent</Link></p>
-              </div>
-            </li>
+                {cat.subcategories && (
+                  <div className={`ml-4 space-y-2 text-sm overflow-hidden transition-all duration-300
+                ${activeMobileDropdown === cat.name ? "max-h-96 opacity-100 mt-2" : "max-h-0 opacity-0"}`}
+                  >
+                    {cat.subcategories.map((sub) => (
+                      <p key={sub.id}>
+                        <Link key={sub.id} to={`/productListing?category=${cat.id}&subcategory=${sub.id}`} className="block hover:bg-gray-100" onClick={() => setMobileMenu(false)}>
+                          {sub.name}
+                        </Link>
+                      </p>
+                    ))}
+                  </div>
+                )}
+              </li>
+            ))}
+            <li><Link to="/aboutus">About Us</Link></li>
+            <li><Link to="/contactus">Contact Us</Link></li>
           </ul>
-
           <hr className="my-4" />
 
           {/* MOBILE BOTTOM OPTIONS */}
-          <div className="mt-4">
+          {/* <div className="mt-4">
             {token ? (
               <div className="flex items-center gap-3">
                 <IoMdExit className="text-lg" />
@@ -316,12 +222,12 @@ const Header = () => {
                 <Link to="/signup" onClick={() => setMobileMenu(false)} className="block">Sign Up</Link>
               </div>
             )}
-          </div>
+          </div> */}
         </div>
       </div>
 
       {/* SEARCH BOX */}
-      <div className={`transition-all duration-500 ${showSearch ? "max-h-96 opacity-100" : "max-h-0 opacity-0"}`}>
+      {/* <div className={`transition-all duration-500 ${showSearch ? "max-h-96 opacity-100" : "max-h-0 opacity-0"}`}>
         <div className="px-6 pb-4 relative">
           <input
             type="text"
@@ -331,7 +237,7 @@ const Header = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
-      </div>
+      </div> */}
     </header>
   );
 };

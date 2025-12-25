@@ -1,175 +1,182 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { GET_PRODUCT } from '../../api/get';
-import { FaChevronRight, FaHeart, FaRegHeart } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
-import { ADD_WISHLIST } from '../../api/post';
-import { toast } from 'react-toastify';
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { GET_PRODUCT } from "../../api/get";
+import { FaChevronRight } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+
+const ITEMS_PER_LOAD = 8;
+const MAX_ITEMS = 20;
+
+const categories = ["All", "Men's", "Women's", "Diamonds"];
 
 const NewArrivals = () => {
-  const [products, setProducts] = useState([]);
-  const [isWished, setIsWished] = useState(false);
-  const [shake, setShake] = useState(false);
+  const [allProducts, setAllProducts] = useState([]);
+  const [visibleProducts, setVisibleProducts] = useState([]);
+  const [activeCategory, setActiveCategory] = useState("All");
+  const [page, setPage] = useState(1);
+
+  const observerRef = useRef(null);
   const navigate = useNavigate();
 
+  /* ================= Fetch Products ================= */
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const res = await GET_PRODUCT();
-        setProducts(res.data.products || []);
+        setAllProducts(res.data?.data || []);
       } catch (err) {
-        console.error('Failed to load products:', err);
+        console.error("Failed to load products", err);
       }
     };
     fetchProducts();
   }, []);
 
-  const handleAddWishList = (product) => {
-    const bodyData = {
-      productId: product?.id,
-    };
-    ADD_WISHLIST(bodyData)
-      .then((res) => {
-        toast("Added In Wishlist");
-        setIsWished(true);
-        setShake(true);
-        setTimeout(() => setShake(false), 500); // reset shake after animation
-      })
-      .catch((err) => {
-        console.log(err);
-        toast.error(err.response.data.message);
-      });
+  /* ================= Filter by Category ================= */
+const filteredProducts = useMemo(() => {
+  return allProducts.filter((product) => {
+    if (activeCategory === "All") return true;
+    return product.category?.name === activeCategory;
+  });
+}, [allProducts, activeCategory]);
+
+  /* ================= Load Products ================= */
+useEffect(() => {
+  const end = Math.min(page * ITEMS_PER_LOAD, MAX_ITEMS);
+  setVisibleProducts(filteredProducts.slice(0, end));
+}, [filteredProducts, page]);
+
+  /* ================= Infinite Scroll ================= */
+  useEffect(() => {
+    if (!observerRef.current) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (
+          entry.isIntersecting &&
+          visibleProducts.length < Math.min(filteredProducts.length, MAX_ITEMS)
+        ) {
+          setPage((prev) => prev + 1);
+        }
+      },
+      { threshold: 1 }
+    );
+
+    observer.observe(observerRef.current);
+    return () => observer.disconnect();
+  }, [visibleProducts, filteredProducts]);
+
+  /* ================= Category Change ================= */
+  const handleCategoryChange = (cat) => {
+    setActiveCategory(cat);
+    setPage(1);
   };
 
   return (
-    <section className="py-10 bg-[#fffcf8]  transition-colors">
-      <div className="container  mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Heading Row */}
-        <div className=" gap-4 mb-8">
-          <h2 className="text-2xl sm:text-3xl text-center font-semibold text-black ">
-            Trending Now
-          </h2>
+    <section className="py-12 bg-[#fffcf8]">
+      <div className="container mx-auto px-4">
 
+        {/* ===== Title ===== */}
+        <h2 className="text-3xl text-center font-semibold mb-6">
+          Trending Now
+        </h2>
+
+        {/* ===== Categories ===== */}
+        <div className="flex justify-center gap-6 mb-10">
+          {categories.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => handleCategoryChange(cat)}
+              className={`pb-1 text-sm font-medium border-b-2 transition ${
+                activeCategory === cat
+                  ? "border-black text-black"
+                  : "border-transparent text-gray-400 hover:text-black"
+              }`}
+            >
+              {cat}
+            </button>
+          ))}
         </div>
 
-        {/* Product Grid */}
+        {/* ===== Products Grid ===== */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {products.map((product, index) => {
-            const variant = product.variants?.[0];
-            if (!variant) return null;
+          {visibleProducts.map((product) => {
+            const images = product.media?.filter((m) => m.type === "image");
+            if (!images?.length) return null;
 
             return (
               <div
-                data-aos="zoom-in"
-                data-aos-delay={index * 100}
-                key={variant.id}
-                className="group relative    overflow-hidden transition-all"
+                key={product.id}
+                className="group relative overflow-hidden"
               >
-                {/* Wishlist Icon */}
-                <div className="absolute top-[-40px] left-4 group-hover:top-4 transition-all duration-300 z-10">
-                  <button
-                    className={`bg-white p-1 md:p-2 rounded-full shadow hover:scale-105 transition-transform ${shake ? "animate-shake" : ""
-                      }`}
-                    onClick={() => handleAddWishList(product)}
-                  >
-                    {isWished ? (
-                      <FaHeart size={18} className="text-red-500" />
-                    ) : (
-                      <FaRegHeart size={18} className="text-red-500" />
-                    )}
-                  </button>
-
-                </div>
-                <div className="absolute top-[-40px] left-4 group-hover:top-4 transition-all duration-300 z-10">
-                  <button
-                    className={`bg-white p-1 md:p-2 rounded-full shadow hover:scale-105 transition-transform ${shake ? "animate-shake" : ""
-                      }`}
-                    onClick={() => handleAddWishList(product)}
-                  >
-                    {isWished ? (
-                      <FaHeart size={18} className="text-red-500" />
-                    ) : (
-                      <FaRegHeart size={18} className="text-red-500" />
-                    )}
-                  </button>
-
-                </div>
-
-                {/* Product Image */}
-                {/* IMAGE CONTAINER WITH HOVER OVERLAY */}
-                <div className="relative w-full h-58 sm:h-72 md:h-80 overflow-hidden">
-
-                  {/* PRODUCT IMAGE */}
+                {/* Image */}
+                <div className="relative w-full h-72 overflow-hidden">
                   <img
-                    onClick={() => navigate(`productDetails/${product.id}`)}
-                    src={variant.images?.[0]}
-                    alt={product.productName}
-                    className="w-full h-full object-cover cursor-pointer transition-all duration-300 group-hover:scale-110 
-               group-hover:opacity-0"
+                    src={images[0].url}
+                    alt={product.name}
+                    onClick={() =>
+                      navigate(`/productDetails/${product.id}`, {
+                        state: product,
+                      })
+                    }
+                    className="w-full h-full object-cover cursor-pointer transition-all duration-300 group-hover:scale-110 group-hover:opacity-0"
                   />
 
-                  {/* HOVER IMAGE (SECOND IMAGE) */}
-                  {variant.images?.[1] && (
+                  {images[1] && (
                     <img
-                      src={variant.images?.[1]}
+                      src={images[1].url}
                       alt="hover"
-                      className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 
-                 transition-opacity duration-300"
+                      className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                     />
                   )}
 
-                  {/* OVERLAY BUTTONS */}
-                  <div
-                    className="absolute inset-0 flex flex-col items-center justify-end gap-3 
-               bg-black/10 opacity-0 group-hover:opacity-100 
-               transition-all duration-300 "
-                  >
-                    {/* ADD TO CART BUTTON */}
+                  <div className="absolute inset-0 flex items-end bg-black/10 opacity-0 group-hover:opacity-100 transition">
                     <button
-                      onClick={() => navigate(`productDetails/${product.id}`)}
-                      className="w-full py-2 bg-primary text-black font-semibold shadow 
-                 hover:bg-black hover:text-white transition"
+                      onClick={() =>
+                        navigate(`/productDetails/${product.id}`, {
+                          state: product,
+                        })
+                      }
+                      className="w-full py-2 bg-primary text-black font-semibold hover:bg-black hover:text-white"
                     >
-                      ADD TO CART
+                      VIEW
                     </button>
-
-                    {/* QUICK VIEW BUTTON */}
-
                   </div>
                 </div>
-                {/* Product Details */}
+
+                {/* Info */}
                 <div className="p-4 text-center">
-                  <h3>
-                    {product.productName.length > 25
-                      ? product.productName.substring(0, 25) + '...'
-                      : product.productName}
+                  <h3 className="font-medium">
+                    {product.name.length > 25
+                      ? product.name.slice(0, 25) + "..."
+                      : product.name}
                   </h3>
-                  <p className=''>
-                    {variant.salePrice ? (
-                      <>
-                        <span className="text-black font-semibold">Rs.{variant.salePrice}.00</span>
-                      
-                      </>
-                    ) : (
-                      <span className="text-black font-semibold">₹{variant.mrp}</span>
-                    )}
+
+                  <p className="text-black font-semibold mt-1">
+                    ₹{Number(product.price).toLocaleString()}
                   </p>
-                  </div>
+
+                  <p className="text-sm text-gray-500">
+                    {product.category?.name} • {product.color?.name}
+                  </p>
+                </div>
               </div>
             );
           })}
         </div>
-        <button
-          className="cursor-pointer group border-2 border-black px-10 py-2 mt-8 mx-auto flex items-center gap-2  hover:bg-black hover:text-white  transition"
-          onClick={() => navigate('/productListing?latest=true')}
-        >
-          <p className="flex items-center gap-2  font-medium">
-            <span className="transition-transform duration-300 group-hover:translate-x-1">
-              SHOW MORE
-            </span>
-            <FaChevronRight className="transition-transform duration-300 group-hover:translate-x-1" />
-          </p>
-        </button>
+
+        {/* ===== Observer ===== */}
+        {visibleProducts.length < Math.min(filteredProducts.length, MAX_ITEMS) && (
+          <div ref={observerRef} className="h-10" />
+        )}
+
+        {/* ===== Show More ===== */}
+        {/* {visibleProducts.length >= MAX_ITEMS && ( */}
+          <button
+            className="border-2 border-black px-10 py-2 mt-10 mx-auto flex items-center gap-2 hover:bg-black hover:text-white transition"
+            onClick={() => navigate("/productListing?latest=true")}
+          >
+            SHOW MORE <FaChevronRight />
+          </button>
+        {/* )} */}
       </div>
     </section>
   );

@@ -20,9 +20,9 @@ const Footer = () => {
         <div>
           <h4 className="font-semibold text-black text-lg mb-4">General Links</h4>
           <ul className="space-y-2 text-sm text-black">
-            <li><a href="/aboutus">About Us</a></li>
-            <li><a href="/collections">Collections</a></li>
-            <li><a href="/productListing?category=diamond-ring">Diamond Rings</a></li>
+            <li className='hover:underline transition ease-in'><a href="/aboutus">About Us</a></li>
+            <li className='hover:underline transition ease-in'><a href="/productListing">Collections</a></li>
+            <li className='hover:underline transition ease-in'><a href="/productListing">Diamond Rings</a></li>
           </ul>
         </div>
 
@@ -43,9 +43,8 @@ const Footer = () => {
         <div>
           <h4 className="font-semibold text-black text-lg mb-4">Follow Us</h4>
           <div className="flex gap-4 text-black text-lg">
-            <a href="https://instagram.com/lacasido_jewel"><FaInstagram /></a>
-            <a href="#"><FaFacebookF /></a>
-            <a href="#"><FaTwitter /></a>
+            <a href="https://instagram.com/lacasido_jewel" target='_blank'><FaInstagram /></a>
+            <a href="#" target='_blank'><FaFacebookF /></a>
           </div>
         </div>
       </div>
