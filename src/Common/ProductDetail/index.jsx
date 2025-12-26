@@ -7,7 +7,7 @@ import SeoTags from "../SeoTags";
 import { ADD_INQUIRY } from "../../api/post";
 import { toast } from "react-toastify";
 
-const WHATSAPP_NUMBER = "919999999999";
+const WHATSAPP_NUMBER = "+919727390998";
 
 const ProductDetail = () => {
     const location = useLocation();
@@ -21,10 +21,7 @@ const ProductDetail = () => {
     /* ================= IMAGE AUTO CHANGE + FADE ================= */
     const [mainImageIndex, setMainImageIndex] = useState(0);
     const [fade, setFade] = useState(false);
-
-
-
-
+    const [autoPlay, setAutoPlay] = useState(true);
 
     const [form, setForm] = useState({
         name: "",
@@ -71,6 +68,9 @@ const ProductDetail = () => {
     const images = product.media.filter((m) => m.type === "image");
 
     /* ================= SUBMIT ================= */
+
+    const WHATSAPP_NUMBER = "919727390998";
+
     const handleSubmitInquiry = async () => {
         if (!validateInquiry()) {
             toast.error("Please fix the errors");
@@ -80,7 +80,40 @@ const ProductDetail = () => {
         try {
             setLoading(true);
             await ADD_INQUIRY(form);
+
+            const discountedPrice = (
+                product.price -
+                (product.price * product.discount_value) / 100
+            ).toFixed(2);
+
+            const productImage =
+                product.media?.find((m) => m.type === "image")?.url || "";
+
+            // ✅ WhatsApp message with image link
+            const message = `
+Hello, I am interested in your product
+
+Product Details
+Name: ${product.name}
+Price: ₹${discountedPrice}
+Weight: ${product.weight} gm
+Category: ${product.category?.name}
+
+
+Customer Details
+Name: ${form.name}
+Email: ${form.email}
+Phone: ${form.phone}
+Country: ${form.country}
+
+Message:${form.message}`.trim();
+
+            const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
+                message
+            )}`;
+
             toast.success("Inquiry submitted successfully");
+
             setOpenInquiry(false);
             setForm({
                 name: "",
@@ -92,6 +125,10 @@ const ProductDetail = () => {
                 source: "whatsapp",
             });
             setErrors({});
+
+            // ✅ Redirect to WhatsApp
+            window.open(whatsappUrl, "_blank");
+
         } catch (err) {
             toast.error("Failed to submit inquiry");
         } finally {
@@ -99,26 +136,29 @@ const ProductDetail = () => {
         }
     };
 
+
+
     const safeDescription = product.description?.includes("<")
         ? product.description
         : `<p>${product.description}</p>`;
     useEffect(() => {
-        if (images.length === 0) return;
-
-        setMainImage(images[0].url); // initial image
+        if (images.length === 0 || !autoPlay) return;
 
         const interval = setInterval(() => {
-            setFade(true); // start fade out
+            setFade(true);
             setTimeout(() => {
                 setMainImageIndex((prev) => (prev + 1) % images.length);
-                setFade(false); // fade in new image
-            }, 300); // fade duration
-        }, 3000); // change image every 4 seconds
+                setFade(false);
+            }, 300);
+        }, 3000);
 
         return () => clearInterval(interval);
-    }, [images]);
+    }, [images, autoPlay]);
+
     useEffect(() => {
-        if (images.length > 0) setMainImage(images[mainImageIndex].url);
+        if (images.length > 0) {
+            setMainImage(images[mainImageIndex].url);
+        }
     }, [mainImageIndex, images]);
     return (
         <>
@@ -133,6 +173,7 @@ const ProductDetail = () => {
                         <div className="relative">
                             <img
                                 src={mainImage}
+
                                 alt={product.name}
                                 className={`h-[450px] object-contain rounded shadow transition-opacity duration-300 ${fade ? "opacity-0" : "opacity-100"}`}
                             />
@@ -145,15 +186,22 @@ const ProductDetail = () => {
                         </div>
 
                         <div className="flex gap-3 flex-wrap justify-center">
-                            {images.map((img) => (
-                                <img
-                                    key={img.id}
-                                    src={img.url}
-                                    onClick={() => setMainImage(img.url)}
-                                    className={`w-16 h-16 object-cover rounded cursor-pointer ${mainImage === img.url ? "ring-2 ring-primary" : ""
-                                        }`}
-                                />
-                            ))}
+                            <div className="flex gap-3 flex-wrap justify-center">
+                                {images.map((img, index) => (
+                                    <img
+                                        key={img.id}
+                                        src={img.url}
+                                        onClick={() => {
+                                            setAutoPlay(false);
+                                            setMainImageIndex(index);
+                                        }}
+                                        className={`w-16 h-16 object-cover rounded cursor-pointer transition-all
+                                        ${mainImageIndex === index ? "ring-2 ring-primary scale-105" : "opacity-70 hover:opacity-100"}
+                                    `}
+                                    />
+                                ))}
+                            </div>
+
                         </div>
                     </div>
 
