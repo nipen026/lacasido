@@ -7,12 +7,10 @@ import SeoTags from "../SeoTags";
 import { ADD_INQUIRY } from "../../api/post";
 import { toast } from "react-toastify";
 
-const WHATSAPP_NUMBER = "+919727390998";
 
 const ProductDetail = () => {
     const location = useLocation();
     const product = location.state;
-
     const [mainImage, setMainImage] = useState("");
     const [isZoomed, setIsZoomed] = useState(false);
     const [openInquiry, setOpenInquiry] = useState(false);
@@ -22,7 +20,10 @@ const ProductDetail = () => {
     const [mainImageIndex, setMainImageIndex] = useState(0);
     const [fade, setFade] = useState(false);
     const [autoPlay, setAutoPlay] = useState(true);
-
+    const [zoomStyle, setZoomStyle] = useState({
+        transform: "scale(1)",
+        transformOrigin: "center",
+    });
     const [form, setForm] = useState({
         name: "",
         email: "",
@@ -160,6 +161,25 @@ Message:${form.message}`.trim();
             setMainImage(images[mainImageIndex].url);
         }
     }, [mainImageIndex, images]);
+
+
+    const handleMouseMove = (e) => {
+        const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
+        const x = ((e.pageX - left) / width) * 100;
+        const y = ((e.pageY - top) / height) * 100;
+
+        setZoomStyle({
+            transform: "scale(2)",
+            transformOrigin: `${x}% ${y}%`,
+        });
+    };
+
+    const handleMouseLeave = () => {
+        setZoomStyle({
+            transform: "scale(1)",
+            transformOrigin: "center",
+        });
+    };
     return (
         <>
             <SeoTags product={product} />
@@ -171,12 +191,22 @@ Message:${form.message}`.trim();
                     {/* IMAGES */}
                     <div className="flex flex-col items-center gap-4">
                         <div className="relative">
-                            <img
-                                src={mainImage}
+                            <div
+                                className="relative h-[450px] w-full max-w-[450px] overflow-hidden rounded shadow cursor-zoom-in bg-white"
+                                onMouseMove={handleMouseMove}
+                                onMouseLeave={handleMouseLeave}
+                            >
+                                <img
+                                    src={mainImage}
+                                    alt={product.name}
+                                    className={`w-full h-full object-contain transition-transform duration-200 ease-out ${fade ? "opacity-0" : "opacity-100"
+                                        }`}
+                                    style={zoomStyle}
+                                />
 
-                                alt={product.name}
-                                className={`h-[450px] object-contain rounded shadow transition-opacity duration-300 ${fade ? "opacity-0" : "opacity-100"}`}
-                            />
+                                {/* Optional Zoom Icon */}
+                               
+                            </div>
                             <button
                                 onClick={() => setIsZoomed(true)}
                                 className="absolute top-2 right-2 bg-white p-2 rounded-full"
@@ -207,7 +237,7 @@ Message:${form.message}`.trim();
 
                     {/* INFO */}
                     <div>
-                        <h1 className="text-2xl font-semibold">{product.name}</h1>
+                        <h1 className="text-2xl font-semibold capitalize">{product.name}</h1>
                         <div className="text-xl font-bold mt-2 flex items-end gap-2">
                             {/* {product.discount ? ( */}
                             {/* <> */}
@@ -220,9 +250,9 @@ Message:${form.message}`.trim();
                         </div>
                         <div className="text-sm  space-y-1 mt-2">
                             <p className="text-[#615e5e]">Category: {product.category?.name}</p>
-                            <p className="text-[#615e5e]">Material: {product.material?.name}</p>
-                            <p className="text-[#615e5e]">Color: {product.color?.name}</p>
-                            <p className="text-[#615e5e]">Size: {product.size?.name}</p>
+                            <p className="text-[#615e5e]">Material: {product.material?.name ? product.material?.name : product.material?.label}</p>
+                            <p className="text-[#615e5e]">Color: {product.color?.name ? product.color?.name : product.color?.label}</p>
+                            <p className="text-[#615e5e]">Size: {product.size?.name ? product.size?.name : product.size?.label}</p>
                             <p className="text-[#615e5e]">Weight: {product.weight} gm</p>
                         </div>
                         <div className="flex items-center gap-2 mt-2">
@@ -231,7 +261,7 @@ Message:${form.message}`.trim();
                         </div>
                         {/* DESCRIPTION */}
                         <div
-                            className="prose prose-sm max-w-none text-gray-700 mt-6"
+                            className="prose prose-sm max-w-none capitalize text-gray-700 mt-6"
                             dangerouslySetInnerHTML={{ __html: safeDescription }}
                         />
 

@@ -12,7 +12,7 @@ const Banner = () => {
       : location.pathname.split("/")[1]?.replace("us", " us") || "";
   return (
     <section
-      className={`relative ${location.pathname == '/' ? 'h-[calc(100vh-130px)]' : 'h-[calc(70vh-130px)]'} w-full overflow-hidden`}
+      className={`relative ${location.pathname == '/' ? 'h-[calc(100vh-130px)]' : 'h-[calc(60vh-130px)]'} w-full overflow-hidden`}
       aria-label="Lacasido Jewellery Banner"
     >
       {/* Background Video */}
