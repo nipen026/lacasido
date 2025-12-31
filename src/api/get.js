@@ -80,6 +80,24 @@ export const GET_SEARCH_DATA = (query) => {
       .catch((err) => reject(err));
   });
 };
+export const GET_CATEGORY = () => {
+  return new Promise((resolve, reject) => {
+    axios
+      .get(`${base_url}/api/categories`,{
+       
+      })
+      .then((res) => resolve(res))
+      .catch((err) => reject(err));
+  });
+};
+export const GET_DROPDOWNS_BY_TYPE = (type) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .get(`${base_url}/api/dropdowns/type/${type}`,{})
+      .then((res) => resolve(res))
+      .catch((err) => reject(err));
+  });
+};
 export const GET_COUPONS = () => {
   return new Promise((resolve, reject) => {
     axios
