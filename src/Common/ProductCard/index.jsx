@@ -34,7 +34,11 @@ const ProductCard = ({ products }) => {
             className="group relative overflow-hidden"
           >
             {/* Image */}
-            <div className="relative w-full h-72 overflow-hidden">
+            <div className="relative cursor-pointer w-full h-72 overflow-hidden" onClick={() =>
+              navigate(`/productDetails/${product.id}`, {
+                state: product,
+              })
+            }>
               <img
                 src={images[0].url}
                 alt={product.name}
