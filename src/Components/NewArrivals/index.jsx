@@ -108,7 +108,11 @@ useEffect(() => {
                 className="group relative overflow-hidden"
               >
                 {/* Image */}
-                <div className="relative w-full h-72 overflow-hidden">
+                <div className="relative w-full h-72 cursor-pointer overflow-hidden" onClick={() =>
+                      navigate(`/productDetails/${product.id}`, {
+                        state: product,
+                      })
+                    }>
                   <img
                     src={images[0].url}
                     alt={product.name}
@@ -123,6 +127,11 @@ useEffect(() => {
                   {images[1] && (
                     <img
                       src={images[1].url}
+                      onClick={() =>
+                        navigate(`/productDetails/${product.id}`, {
+                          state: product,
+                        })
+                      }
                       alt="hover"
                       className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                     />

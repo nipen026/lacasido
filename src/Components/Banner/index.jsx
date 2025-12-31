@@ -1,18 +1,23 @@
 import React from 'react';
 import banner from '../../assets/banner_video.mp4';
-import { useNavigate } from 'react-router-dom';
+import AboutBanner from '../../assets/about_banner.mp4';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const Banner = () => {
   const navigate = useNavigate();
-
+  const location = useLocation();
+  const pageName =
+    location.pathname === "/" || location.pathname === "/productListing"
+      ? ""
+      : location.pathname.split("/")[1]?.replace("us", " us") || "";
   return (
     <section
-      className="relative h-[calc(100vh-130px)] w-full overflow-hidden"
+      className={`relative ${location.pathname == '/' ? 'h-[calc(100vh-130px)]' : 'h-[calc(70vh-130px)]'} w-full overflow-hidden`}
       aria-label="Lacasido Jewellery Banner"
     >
       {/* Background Video */}
       <video
-        src={banner}
+        src={location.pathname == '/' ? banner : AboutBanner}
         autoPlay
         loop
         muted
@@ -26,17 +31,21 @@ const Banner = () => {
 
           {/* Heading */}
           <h1 className="text-white text-4xl md:text-5xl font-extrabold mb-4">
-            <span className="text-center md:hidden inline-block animate-typing whitespace-nowrap overflow-hidden">
-              Lacasido Jewellery
+
+
+            <span className="text-center capitalize md:hidden inline-block animate-typing whitespace-nowrap overflow-hidden">
+              Lacasido Jewellery {pageName}
             </span>
-            <span className="hidden md:inline-block animate-typing whitespace-nowrap overflow-hidden">
-              Lacasido Jewellery 
+
+            <span className="hidden capitalize md:inline-block animate-typing whitespace-nowrap overflow-hidden">
+              Lacasido Jewellery {pageName}
             </span>
+
           </h1>
 
           {/* Subtext */}
           <p className="mb-6 text-xl font-light">
-            Discover premium diamond rings designed to shine with every moment.  
+            Discover premium diamond rings designed to shine with every moment.
             At Lacasido Jewellery, elegance meets craftsmanship in every piece.
           </p>
 

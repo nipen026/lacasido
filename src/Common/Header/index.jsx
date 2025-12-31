@@ -118,8 +118,6 @@ const Header = () => {
             );
           })}
         </ul>
-
-
         {/* LOGO */}
         <Link to="/">
           <img src={logo} alt="logo" className="w-[150px] cursor-pointer" />
@@ -129,7 +127,9 @@ const Header = () => {
         <ul className="hidden md:flex gap-6">
           {categories.map((cat) => (
             <li key={cat.id} className="group relative cursor-pointer font-medium text-[16px]">
-              {cat.name}
+              <Link key={cat.id} to={`/productListing?category=${cat.id}`}  onClick={() => setMobileMenu(false)}>
+                    {cat.name}
+                  </Link>
               {cat.subcategories && cat.subcategories.length > 0 && (
                 <div className="absolute left-0 mt-2 bg-white shadow-lg rounded-md w-48 py-2 z-50
                 opacity-0 invisible translate-y-4 scale-95
@@ -184,8 +184,11 @@ const Header = () => {
                 <div
                   className="flex justify-between items-center cursor-pointer"
                   onClick={() => toggleDropdown(cat.name)}
-                >
-                  <span>{cat.name}</span>
+                > 
+                <Link key={cat.id} to={`/productListing?category=${cat.id}`} className="block hover:bg-gray-100" onClick={() => setMobileMenu(false)}>
+                    {cat.name}
+                  </Link>
+
                   <span>{activeMobileDropdown === cat.name ? "-" : "+"}</span>
                 </div>
 

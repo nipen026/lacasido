@@ -9,30 +9,32 @@ import { GET_FILTER_PRODUCT, GET_PRODUCT } from '../../api/get';
 import { useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import queryString from 'query-string';
+import Loader from '../../Common/Loader';
 
 const ProductListing = () => {
   const [filters, setFilters] = useState({ category: [], price: [], size: [], color: [] });
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const location = useLocation();
-  const { category } = queryString.parse(location.search);
+
+  const { category, subcategory } = queryString.parse(location.search);
   // Fetch products from your API
-useEffect(() => {
-  const fetchProducts = async () => {
-    // if (!category) return;
-    setLoading(true);
-    try {
-      const response = category ? await GET_FILTER_PRODUCT(category) : await GET_PRODUCT();
-      
-      setProducts(response.data.data || []);
-    } catch (error) {
-      console.error('Failed to fetch products:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-  fetchProducts();
-}, [category]);
+  useEffect(() => {
+    const fetchProducts = async () => {
+      // if (!category) return;
+      setLoading(true);
+      try {
+        const response = category ? await GET_FILTER_PRODUCT(subcategory ? subcategory : category) : await GET_PRODUCT();
+
+        setProducts(response.data.data || []);
+      } catch (error) {
+        console.error('Failed to fetch products:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProducts();
+  }, [category, subcategory]);
 
   // Apply category and price filters
   const filteredProducts = products.filter((product) => {
@@ -69,44 +71,46 @@ useEffect(() => {
 
   return (
     <>
-      {/* SEO Tags */}
-      <Helmet>
-        <title>{seoTitle}</title>
-        <meta name="description" content={seoDescription} />
-        <meta name="keywords" content={seoKeywords} />
+      {loading ? <Loader /> : (
+        <>
+          {/* SEO Tags */}
+          <Helmet>
+            <title>{seoTitle}</title>
+            <meta name="description" content={seoDescription} />
+            <meta name="keywords" content={seoKeywords} />
 
-        {/* Open Graph for social sharing */}
-        <meta property="og:title" content={seoTitle} />
-        <meta property="og:description" content={seoDescription} />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content={window.location.href} />
-        {products[0]?.variants?.[0]?.images?.[0] && (
-          <meta property="og:image" content={products[0].variants[0].images[0]} />
-        )}
+            {/* Open Graph for social sharing */}
+            <meta property="og:title" content={seoTitle} />
+            <meta property="og:description" content={seoDescription} />
+            <meta property="og:type" content="website" />
+            <meta property="og:url" content={window.location.href} />
+            {products[0]?.variants?.[0]?.images?.[0] && (
+              <meta property="og:image" content={products[0].variants[0].images[0]} />
+            )}
 
-        {/* Twitter Card */}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={seoTitle} />
-        <meta name="twitter:description" content={seoDescription} />
-      </Helmet>
+            {/* Twitter Card */}
+            <meta name="twitter:card" content="summary_large_image" />
+            <meta name="twitter:title" content={seoTitle} />
+            <meta name="twitter:description" content={seoDescription} />
+          </Helmet>
 
-      <Header />
-      <Banner />
+          <Header />
+          <Banner />
 
-      {/* Products Section */}
-      <div className="px-6 py-10">
-        <div className="container">
-          {/* <Filters filters={filters} setFilters={setFilters} /> */}
-          <div className=" transition-all duration-500">
-            <h2 className="text-xl font-bold mb-4">
-              {loading ? 'Loading Products...' : `Showing ${filteredProducts.length} Products`}
-            </h2>
-            <ProductGrid products={filteredProducts} />
+          {/* Products Section */}
+          <div className="px-6 py-10">
+            <div className="container">
+              {/* <Filters filters={filters} setFilters={setFilters} /> */}
+              <div className=" transition-all duration-500">
+
+                <ProductGrid products={filteredProducts} />
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
 
-      <Footer />
+          <Footer />
+        </>
+      )}
     </>
   );
 };
