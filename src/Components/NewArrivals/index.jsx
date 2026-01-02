@@ -6,13 +6,18 @@ import { useNavigate } from "react-router-dom";
 const ITEMS_PER_LOAD = 8;
 const MAX_ITEMS = 20;
 
-const categories = ["All", "Men's", "Women's", "Diamonds"];
+
 
 const NewArrivals = () => {
   const [allProducts, setAllProducts] = useState([]);
   const [visibleProducts, setVisibleProducts] = useState([]);
-  const [activeCategory, setActiveCategory] = useState("All");
+
   const [page, setPage] = useState(1);
+  const [hoveredId, setHoveredId] = useState(null);
+  const [categories, setCategories] = useState([]);
+  const [categoryMap, setCategoryMap] = useState({});
+  const [activeCategoryId, setActiveCategoryId] = useState("all");
+
 
   const observerRef = useRef(null);
   const navigate = useNavigate();
@@ -29,20 +34,55 @@ const NewArrivals = () => {
     };
     fetchProducts();
   }, []);
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await fetch("https://api.lacasidojewellery.com/api/categories");
+        const data = await res.json();
+
+        const parents = (data.data || []).filter(
+          (c) => c.parent_id === null
+        );
+
+        setCategories(parents);
+        setCategoryMap(buildCategoryMap(parents));
+      } catch (error) {
+        console.error("Failed to fetch categories:", error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+  const buildCategoryMap = (categories) => {
+    const map = {};
+
+    categories.forEach((parent) => {
+      map[parent.id] = [
+        parent.id,
+        ...(parent.subcategories?.map((sub) => sub.id) || []),
+      ];
+    });
+
+    return map;
+  };
+
 
   /* ================= Filter by Category ================= */
-const filteredProducts = useMemo(() => {
-  return allProducts.filter((product) => {
-    if (activeCategory === "All") return true;
-    return product.category?.name === activeCategory;
-  });
-}, [allProducts, activeCategory]);
+  const filteredProducts = useMemo(() => {
+    if (activeCategoryId === "all") return allProducts;
+
+    const allowedCategoryIds = categoryMap[activeCategoryId] || [];
+
+    return allProducts.filter((product) =>
+      allowedCategoryIds.includes(product.category?.id)
+    );
+  }, [allProducts, activeCategoryId, categoryMap]);
 
   /* ================= Load Products ================= */
-useEffect(() => {
-  const end = Math.min(page * ITEMS_PER_LOAD, MAX_ITEMS);
-  setVisibleProducts(filteredProducts.slice(0, end));
-}, [filteredProducts, page]);
+  useEffect(() => {
+    const end = Math.min(page * ITEMS_PER_LOAD, MAX_ITEMS);
+    setVisibleProducts(filteredProducts.slice(0, end));
+  }, [filteredProducts, page]);
 
   /* ================= Infinite Scroll ================= */
   useEffect(() => {
@@ -80,89 +120,111 @@ useEffect(() => {
         </h2>
 
         {/* ===== Categories ===== */}
-        <div className="flex justify-center gap-6 mb-10">
+        <div className="flex justify-center gap-6 mb-10 flex-wrap">
+          <button
+            onClick={() => {
+              setActiveCategoryId("all");
+              setPage(1);
+            }}
+            className={`pb-1 border-b-2 ${activeCategoryId === "all"
+              ? "border-black text-black"
+              : "border-transparent text-gray-400"
+              }`}
+          >
+            All
+          </button>
+
           {categories.map((cat) => (
             <button
-              key={cat}
-              onClick={() => handleCategoryChange(cat)}
-              className={`pb-1 text-sm font-medium border-b-2 transition ${
-                activeCategory === cat
-                  ? "border-black text-black"
-                  : "border-transparent text-gray-400 hover:text-black"
-              }`}
+              key={cat.id}
+              onClick={() => {
+                setActiveCategoryId(cat.id);
+                setPage(1);
+              }}
+              className={`pb-1 border-b-2 ${activeCategoryId === cat.id
+                ? "border-black text-black"
+                : "border-transparent text-gray-400"
+                }`}
             >
-              {cat}
+              {cat.name}
             </button>
           ))}
         </div>
 
+
         {/* ===== Products Grid ===== */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {visibleProducts.length === 0 && (
+            <p className="col-span-4 text-center text-gray-500">
+              No products found.
+            </p>
+          )}
           {visibleProducts.map((product) => {
-            const images = product.media?.filter((m) => m.type === "image");
-            if (!images?.length) return null;
+            const images = product.media?.filter((m) => m.type === "image") || [];
+            const video = product.media?.find((m) => m.type === "video");
+            if (images.length === 0) return null;
 
             return (
-              <div
-                key={product.id}
-                className="group relative overflow-hidden"
-              >
-                {/* Image */}
-                <div className="relative w-full h-72 cursor-pointer overflow-hidden" onClick={() =>
-                      navigate(`/productDetails/${product.id}`, {
-                        state: product,
-                      })
-                    }>
+              <div key={product.id} className="group relative overflow-hidden">
+                <div
+                  className="relative w-full h-72 cursor-pointer overflow-hidden"
+                  onClick={() => {
+
+                    navigate(`/productDetails/${product.id}`, { state: product });
+                  }}
+                  onMouseEnter={() => setHoveredId(product.id)}
+                  onMouseLeave={() => setHoveredId(null)}
+                >
+                  {/* Primary image */}
                   <img
                     src={images[0].url}
                     alt={product.name}
-                    onClick={() =>
-                      navigate(`/productDetails/${product.id}`, {
-                        state: product,
-                      })
-                    }
-                    className="w-full h-full object-cover cursor-pointer transition-all duration-300 group-hover:scale-110 group-hover:opacity-0"
+                    className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300
+      ${hoveredId === product.id && video ? "opacity-0" : "opacity-100"}
+    `}
                   />
+                  {video && hoveredId === product.id && (
+                    <video
+                      src={video.url}
+                      muted
+                      playsInline
+                      autoPlay
+                      loop
+                      preload="none"
+                      className="absolute inset-0 w-full h-full object-cover"
+                    />
+                  )}
 
+                  {/* Hover image */}
                   {images[1] && (
                     <img
                       src={images[1].url}
-                      onClick={() =>
-                        navigate(`/productDetails/${product.id}`, {
-                          state: product,
-                        })
-                      }
                       alt="hover"
                       className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                     />
                   )}
 
+                  {/* View overlay */}
                   <div className="absolute inset-0 flex items-end bg-black/10 opacity-0 group-hover:opacity-100 transition">
-                    <button
-                      onClick={() =>
-                        navigate(`/productDetails/${product.id}`, {
-                          state: product,
-                        })
-                      }
-                      className="w-full py-2 bg-primary text-black font-semibold hover:bg-black hover:text-white"
-                    >
+                    <button className="w-full py-2 bg-primary font-semibold">
                       VIEW
                     </button>
                   </div>
+
+                  {/* 🎥 Video badge (optional, UX only) */}
+
                 </div>
 
                 {/* Info */}
                 <div className="p-4 text-center">
-                  <h3 className="font-medium">
+                  <h3 className="font-medium capitalize">
                     {product.name.length > 25
                       ? product.name.slice(0, 25) + "..."
                       : product.name}
                   </h3>
-
-                  <p className="text-black font-semibold mt-1">
+                  <p className="font-semibold mt-1">
                     ₹{Number(product.price).toLocaleString()}
                   </p>
-
                   <p className="text-sm text-gray-500">
                     {product.category?.name} • {product.color?.name}
                   </p>
@@ -170,6 +232,7 @@ useEffect(() => {
               </div>
             );
           })}
+
         </div>
 
         {/* ===== Observer ===== */}
@@ -179,12 +242,12 @@ useEffect(() => {
 
         {/* ===== Show More ===== */}
         {/* {visibleProducts.length >= MAX_ITEMS && ( */}
-          <button
-            className="border-2 border-black px-10 py-2 mt-10 mx-auto flex items-center gap-2 hover:bg-black hover:text-white transition"
-            onClick={() => navigate("/productListing?latest=true")}
-          >
-            SHOW MORE <FaChevronRight />
-          </button>
+        <button
+          className="border-2 border-black px-10 py-2 mt-10 mx-auto flex items-center gap-2 hover:bg-black hover:text-white transition"
+          onClick={() => navigate("/productListing?latest=true")}
+        >
+          SHOW MORE <FaChevronRight />
+        </button>
         {/* )} */}
       </div>
     </section>

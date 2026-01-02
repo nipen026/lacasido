@@ -11,7 +11,8 @@ import { toast } from "react-toastify";
 const ProductDetail = () => {
     const location = useLocation();
     const product = location.state;
-    const [mainImage, setMainImage] = useState("");
+    const [mainMedia, setMainMedia] = useState(null);
+
     const [isZoomed, setIsZoomed] = useState(false);
     const [openInquiry, setOpenInquiry] = useState(false);
     const [errors, setErrors] = useState({});
@@ -33,6 +34,7 @@ const ProductDetail = () => {
         message: "",
         source: "whatsapp",
     });
+    console.log(product, "product");
 
     /* ================= VALIDATION ================= */
     const validateInquiry = () => {
@@ -53,8 +55,7 @@ const ProductDetail = () => {
     /* ================= IMAGE ================= */
     useEffect(() => {
         if (product?.media?.length) {
-            const img = product.media.find((m) => m.type === "image");
-            setMainImage(img?.url || "");
+            setMainMedia(product.media[0]); // image or video
         }
     }, [product]);
 
@@ -67,6 +68,7 @@ const ProductDetail = () => {
     }
 
     const images = product.media.filter((m) => m.type === "image");
+    const videos = product.media.filter((m) => m.type === "video");
 
     /* ================= SUBMIT ================= */
 
@@ -142,25 +144,29 @@ Message:${form.message}`.trim();
     const safeDescription = product.description?.includes("<")
         ? product.description
         : `<p>${product.description}</p>`;
+
     useEffect(() => {
-        if (images.length === 0 || !autoPlay) return;
+        if (!autoPlay || !mainMedia || mainMedia.type !== "image") return;
+        if (images.length <= 1) return;
 
         const interval = setInterval(() => {
             setFade(true);
             setTimeout(() => {
-                setMainImageIndex((prev) => (prev + 1) % images.length);
+                setMainMedia((prev) => {
+                    const currentIndex = images.findIndex(
+                        (img) => img.id === prev.id
+                    );
+                    return images[(currentIndex + 1) % images.length];
+                });
                 setFade(false);
             }, 300);
         }, 3000);
 
         return () => clearInterval(interval);
-    }, [images, autoPlay]);
+    }, [autoPlay, images, mainMedia]);
 
-    useEffect(() => {
-        if (images.length > 0) {
-            setMainImage(images[mainImageIndex].url);
-        }
-    }, [mainImageIndex, images]);
+
+
 
 
     const handleMouseMove = (e) => {
@@ -180,6 +186,8 @@ Message:${form.message}`.trim();
             transformOrigin: "center",
         });
     };
+    console.log(mainMedia, "mainMedia");
+
     return (
         <>
             <SeoTags product={product} />
@@ -192,21 +200,30 @@ Message:${form.message}`.trim();
                     <div className="flex flex-col items-center gap-4">
                         <div className="relative">
                             <div
-                                className="relative h-[450px] w-full max-w-[450px] overflow-hidden rounded shadow cursor-zoom-in bg-white"
-                                onMouseMove={handleMouseMove}
-                                onMouseLeave={handleMouseLeave}
+                                className="relative h-[450px] w-full max-w-[450px] overflow-hidden rounded shadow bg-white"
+                                onMouseMove={mainMedia?.type === "image" ? handleMouseMove : undefined}
+                                onMouseLeave={mainMedia?.type === "image" ? handleMouseLeave : undefined}
                             >
-                                <img
-                                    src={mainImage}
-                                    alt={product.name}
-                                    className={`w-full h-full object-contain transition-transform duration-200 ease-out ${fade ? "opacity-0" : "opacity-100"
-                                        }`}
-                                    style={zoomStyle}
-                                />
+                                {mainMedia?.type === "video" ? (
+                                    <video
+                                        src={mainMedia.url}
+                                        autoPlay
+                                        controls={false}
+                                        playsInline
+                                        className="w-full h-full object-cover bg-black rounded"
+                                    />
+                                ) : (
+                                    <img
+                                        src={mainMedia?.url}
+                                        alt={product.name}
+                                        className={`w-full h-full object-cover cursor-zoom-in transition-all duration-300 ${fade ? "opacity-0" : "opacity-100"
+                                            }`}
+                                        style={zoomStyle}
+                                    />
+                                )}
 
-                                {/* Optional Zoom Icon */}
-                               
                             </div>
+
                             <button
                                 onClick={() => setIsZoomed(true)}
                                 className="absolute top-2 right-2 bg-white p-2 rounded-full"
@@ -217,20 +234,38 @@ Message:${form.message}`.trim();
 
                         <div className="flex gap-3 flex-wrap justify-center">
                             <div className="flex gap-3 flex-wrap justify-center">
-                                {images.map((img, index) => (
-                                    <img
-                                        key={img.id}
-                                        src={img.url}
+                                {product.media.map((media, index) => (
+                                    <div
+                                        key={media.id}
                                         onClick={() => {
                                             setAutoPlay(false);
-                                            setMainImageIndex(index);
+                                            setMainMedia(media);
                                         }}
-                                        className={`w-16 h-16 object-cover rounded cursor-pointer transition-all
-                                        ${mainImageIndex === index ? "ring-2 ring-primary scale-105" : "opacity-70 hover:opacity-100"}
-                                    `}
-                                    />
+                                        className={`relative w-16 h-16 rounded cursor-pointer overflow-hidden border
+                                        ${mainMedia?.id === media.id
+                                                ? "ring-2 ring-primary scale-105"
+                                                : "opacity-70 hover:opacity-100"
+                                            }`}>
+                                        {media.type === "video" ? (
+                                            <>
+                                                <video
+                                                    src={media.url}
+                                                    className="w-full h-full object-cover"
+                                                />
+                                                <span className="absolute inset-0 flex items-center justify-center text-white text-xl bg-black/40">
+                                                    ▶
+                                                </span>
+                                            </>
+                                        ) : (
+                                            <img
+                                                src={media.url}
+                                                className="w-full h-full object-cover"
+                                            />
+                                        )}
+                                    </div>
                                 ))}
                             </div>
+
 
                         </div>
                     </div>
@@ -297,9 +332,9 @@ Message:${form.message}`.trim();
                             <input className="mt-1 w-full rounded-lg border px-3 py-2 focus:ring-2 focus:ring-primary outline-none" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="John Doe" /> {errors.name && <p className="text-xs text-red-500 mt-1">{errors.name}</p>} </div> {/* Email */} <div> <label className="text-xs text-gray-500">Email</label> <input className="mt-1 w-full rounded-lg border px-3 py-2 focus:ring-2 focus:ring-primary outline-none" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="john@email.com" /> {errors.email && <p className="text-xs text-red-500 mt-1">{errors.email}</p>} </div> {/* Phone + Country */} <div className="grid grid-cols-2 gap-3"> <div> <label className="text-xs text-gray-500">Phone</label> <input className="mt-1 w-full rounded-lg border px-3 py-2 focus:ring-2 focus:ring-primary outline-none" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} placeholder="9876543210" /> {errors.phone && <p className="text-xs text-red-500 mt-1">{errors.phone}</p>} </div> <div> <label className="text-xs text-gray-500">Country</label> <input className="mt-1 w-full rounded-lg border px-3 py-2 focus:ring-2 focus:ring-primary outline-none" value={form.country} onChange={(e) => setForm({ ...form, country: e.target.value })} placeholder="India" /> </div> </div> {/* Message */} <div> <label className="text-xs text-gray-500">Message</label> <textarea rows="3" className="mt-1 w-full rounded-lg border px-3 py-2 focus:ring-2 focus:ring-primary outline-none resize-none" value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} placeholder="I’m interested in this product..." /> {errors.message && <p className="text-xs text-red-500 mt-1">{errors.message}</p>} </div> {/* Source */} <div> <label className="text-xs text-gray-500">Source</label> <select className="mt-1 w-full rounded-lg border px-3 py-2 focus:ring-2 focus:ring-primary outline-none" value={form.source} onChange={(e) => setForm({ ...form, source: e.target.value })} > <option value="whatsapp">WhatsApp</option> <option value="website">Website</option> </select> </div> </div> {/* Footer */} <div className="p-6 border-t"> <button onClick={handleSubmitInquiry} className="w-full flex items-center justify-center gap-2 rounded-xl bg-white hover:bg-primary text-black border-[1px] border-black py-3 font-medium hover:opacity-90 capitalize transition" > {form.source == 'whatsapp' ? <FaWhatsapp className="text-lg " /> : <FaGlobe className="text-lg " />} Send via {form.source} </button> </div> </div> </div>)}
 
             {/* ================= ZOOM ================= */}
-            {isZoomed && (
-                <div className="fixed inset-0 bg-black/70 z-50 flex justify-center items-center">
-                    <img src={mainImage} className="h-[500px] object-contain " />
+            {isZoomed && mainMedia?.type === "image" && (
+                <div className="fixed inset-0 bg-black/70 z-50 flex  justify-center items-center">
+                    <img src={mainMedia.url} className="h-[500px] cursor-zoom-in object-contain" />
                     <button
                         onClick={() => setIsZoomed(false)}
                         className="absolute top-6 right-6 text-white text-2xl"
