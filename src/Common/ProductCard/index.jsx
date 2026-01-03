@@ -64,7 +64,7 @@ const ProductCard = ({ products }) => {
 
               {/* View overlay */}
               <div className="absolute inset-0 flex items-end bg-black/10 opacity-0 group-hover:opacity-100 transition">
-                <button className="w-full py-2 bg-primary font-semibold">
+                <button className="w-full hover:bg-black hover:text-white transition ease-in py-2 bg-primary font-semibold">
                   VIEW
                 </button>
               </div>

@@ -321,7 +321,7 @@ Message:${form.message}`.trim();
                         <button onClick={() => setOpenInquiry(false)} className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition" > ✕ </button>
                     </div> {/* Body */}
                     <div className="p-6 space-y-4"> {/* Product Preview */} <div className="flex gap-3 items-center bg-gray-50 p-3 rounded-lg">
-                        <img src={mainImage} className="w-16 h-16 object-contain rounded" alt="" />
+                        <img src={mainMedia.url} className="w-16 h-16 object-contain rounded" alt="" />
                         <div>
                             <p className="text-sm font-medium text-gray-800 line-clamp-1"> {product.name} </p>
                             <p className="text-xs text-gray-500">Interested Product</p>
