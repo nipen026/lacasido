@@ -12,13 +12,10 @@ const ProductDetail = () => {
     const location = useLocation();
     const product = location.state;
     const [mainMedia, setMainMedia] = useState(null);
-
     const [isZoomed, setIsZoomed] = useState(false);
     const [openInquiry, setOpenInquiry] = useState(false);
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
-    /* ================= IMAGE AUTO CHANGE + FADE ================= */
-    const [mainImageIndex, setMainImageIndex] = useState(0);
     const [fade, setFade] = useState(false);
     const [autoPlay, setAutoPlay] = useState(true);
     const [zoomStyle, setZoomStyle] = useState({
@@ -34,7 +31,6 @@ const ProductDetail = () => {
         message: "",
         source: "whatsapp",
     });
-    console.log(product, "product");
 
     /* ================= VALIDATION ================= */
     const validateInquiry = () => {
@@ -43,8 +39,8 @@ const ProductDetail = () => {
         if (!form.name.trim()) newErrors.name = "Name is required";
         if (!form.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/))
             newErrors.email = "Valid email required";
-        if (!form.phone.match(/^\d{10,15}$/))
-            newErrors.phone = "Phone must be 10–15 digits";
+        if (!form.phone.match(/^\d{10}$/))
+            newErrors.phone = "Phone must be 10 digits";
         if (!form.country.trim()) newErrors.country = "Country is required";
         if (!form.message.trim()) newErrors.message = "Message is required";
 
@@ -141,9 +137,9 @@ Message:${form.message}`.trim();
 
 
 
-    const safeDescription = product.description?.includes("<")
+    const safeDescription = product.description ? (product.description?.includes("<")
         ? product.description
-        : `<p>${product.description}</p>`;
+        : `<p>${product.description}</p>`) : null;
 
     useEffect(() => {
         if (!autoPlay || !mainMedia || mainMedia.type !== "image") return;
@@ -186,7 +182,6 @@ Message:${form.message}`.trim();
             transformOrigin: "center",
         });
     };
-    console.log(mainMedia, "mainMedia");
 
     return (
         <>
@@ -295,10 +290,17 @@ Message:${form.message}`.trim();
                             <a href={product.indiamart_link} target="_blank" rel="noopener noreferrer" className="hover:underline cursor-pointer">Product Brochure</a>
                         </div>
                         {/* DESCRIPTION */}
-                        <div
-                            className="prose prose-sm max-w-none capitalize text-gray-700 mt-6"
-                            dangerouslySetInnerHTML={{ __html: safeDescription }}
-                        />
+                        {safeDescription ? (
+                            <>
+                                <h2 className="text-lg mt-5 font-semibold capitalize">Product Description</h2>
+                                <div
+                                    className="prose prose-sm max-w-none capitalize text-gray-700 mt-6"
+                                    dangerouslySetInnerHTML={{ __html: safeDescription }}
+                                />
+                            </>
+                        ) : (
+                            <p className="text-gray-500 mt-2">No description available.</p>
+                        )}
 
 
                         <button
@@ -315,7 +317,7 @@ Message:${form.message}`.trim();
             {openInquiry && (<div className="fixed inset-0 z-50 flex items-center justify-center px-4">
                 {/* Backdrop */}
                 <div className="absolute inset-0 bg-black/60 backdrop-blur-sm animate-fadeIn" onClick={() => setOpenInquiry(false)} />
-                {/* Modal */} <div className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl z-10 animate-scaleIn overflow-hidden">
+                {/* Modal */} <div className="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl z-10 animate-scaleIn overflow-hidden">
                     {/* Header */} <div className="flex items-center justify-between px-6 py-4 border-b">
                         <h2 className="text-lg font-semibold text-gray-800"> Send Inquiry </h2>
                         <button onClick={() => setOpenInquiry(false)} className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition" > ✕ </button>
@@ -327,9 +329,45 @@ Message:${form.message}`.trim();
                             <p className="text-xs text-gray-500">Interested Product</p>
                         </div>
                     </div> {/* Name */}
+                        <div className="flex items-center gap-4">
+                            <div>
+                                <label className="text-xs text-gray-500">Your Name</label>
+                                <input className="mt-1 w-full rounded-lg border px-3 py-2 focus:ring-2 focus:ring-primary outline-none" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="John Doe" />
+                                {errors.name && <p className="text-xs text-red-500 ">{errors.name}</p>}
+                            </div> {/* Email */}
+                            <div>
+                                <label className="text-xs text-gray-500">Email</label>
+                                <input className="mt-1 w-full rounded-lg border px-3 py-2 focus:ring-2 focus:ring-primary outline-none" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="john@email.com" />
+                                {errors.email && <p className="text-xs text-red-500 ">{errors.email}</p>}
+                            </div></div> {/* Phone + Country */}
+                        <div className="grid grid-cols-2 gap-3"> <div>
+                            <label className="text-xs text-gray-500">Phone</label>
+                            <input type="tel" className="mt-1 w-full rounded-lg border px-3 py-2 focus:ring-2 focus:ring-primary outline-none" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} placeholder="9876543210" maxLength={10} pattern="[0-9]*" />
+                            {errors.phone && <p className="text-xs text-red-500">{errors.phone}</p>}
+                        </div>
+                            <div>
+                                <label className="text-xs text-gray-500">Country</label>
+                                <input className="mt-1 w-full rounded-lg border px-3 py-2 focus:ring-2 focus:ring-primary outline-none" value={form.country} onChange={(e) => setForm({ ...form, country: e.target.value })} placeholder="India" />
+                            </div>
+                        </div> {/* Message */}
                         <div>
-                            <label className="text-xs text-gray-500">Your Name</label>
-                            <input className="mt-1 w-full rounded-lg border px-3 py-2 focus:ring-2 focus:ring-primary outline-none" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="John Doe" /> {errors.name && <p className="text-xs text-red-500 mt-1">{errors.name}</p>} </div> {/* Email */} <div> <label className="text-xs text-gray-500">Email</label> <input className="mt-1 w-full rounded-lg border px-3 py-2 focus:ring-2 focus:ring-primary outline-none" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="john@email.com" /> {errors.email && <p className="text-xs text-red-500 mt-1">{errors.email}</p>} </div> {/* Phone + Country */} <div className="grid grid-cols-2 gap-3"> <div> <label className="text-xs text-gray-500">Phone</label> <input className="mt-1 w-full rounded-lg border px-3 py-2 focus:ring-2 focus:ring-primary outline-none" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} placeholder="9876543210" /> {errors.phone && <p className="text-xs text-red-500 mt-1">{errors.phone}</p>} </div> <div> <label className="text-xs text-gray-500">Country</label> <input className="mt-1 w-full rounded-lg border px-3 py-2 focus:ring-2 focus:ring-primary outline-none" value={form.country} onChange={(e) => setForm({ ...form, country: e.target.value })} placeholder="India" /> </div> </div> {/* Message */} <div> <label className="text-xs text-gray-500">Message</label> <textarea rows="3" className="mt-1 w-full rounded-lg border px-3 py-2 focus:ring-2 focus:ring-primary outline-none resize-none" value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} placeholder="I’m interested in this product..." /> {errors.message && <p className="text-xs text-red-500 mt-1">{errors.message}</p>} </div> {/* Source */} <div> <label className="text-xs text-gray-500">Source</label> <select className="mt-1 w-full rounded-lg border px-3 py-2 focus:ring-2 focus:ring-primary outline-none" value={form.source} onChange={(e) => setForm({ ...form, source: e.target.value })} > <option value="whatsapp">WhatsApp</option> <option value="website">Website</option> </select> </div> </div> {/* Footer */} <div className="p-6 border-t"> <button onClick={handleSubmitInquiry} className="w-full flex items-center justify-center gap-2 rounded-xl bg-white hover:bg-primary text-black border-[1px] border-black py-3 font-medium hover:opacity-90 capitalize transition" > {form.source == 'whatsapp' ? <FaWhatsapp className="text-lg " /> : <FaGlobe className="text-lg " />} Send via {form.source} </button> </div> </div> </div>)}
+                            <label className="text-xs text-gray-500">Message</label>
+                            <textarea rows="3" className="mt-1 w-full rounded-lg border px-3 py-2 focus:ring-2 focus:ring-primary outline-none resize-none" value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} placeholder="I’m interested in this product..." />
+                            {errors.message && <p className="text-xs text-red-500 ">{errors.message}</p>}
+                        </div> {/* Source */}
+                        <div>
+                            <label className="text-xs text-gray-500">Source</label>
+                            <select className="mt-1 w-full rounded-lg border px-3 py-2 focus:ring-2 focus:ring-primary outline-none" value={form.source} onChange={(e) => setForm({ ...form, source: e.target.value })} >
+                                <option value="whatsapp">WhatsApp</option>
+                                <option value="website">Website</option>
+                            </select>
+                        </div>
+                    </div> {/* Footer */}
+                    <div className="p-6 border-t">
+                        <button onClick={handleSubmitInquiry} className="w-full flex items-center justify-center gap-2 rounded-xl bg-white hover:bg-primary text-black border-[1px] border-black py-3 font-medium hover:opacity-90 capitalize transition" > {form.source == 'whatsapp' ? <FaWhatsapp className="text-lg " /> : <FaGlobe className="text-lg " />} Send via {form.source} </button>
+                    </div>
+                </div>
+            </div>)}
 
             {/* ================= ZOOM ================= */}
             {isZoomed && mainMedia?.type === "image" && (
