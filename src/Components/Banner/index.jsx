@@ -51,7 +51,7 @@ const Banner = () => {
 
           {/* Button */}
           <button
-            onClick={() => navigate('/contactus')}
+            onClick={() => navigate('/productListing?letest=true')}
             className="border border-white font-semibold px-6 py-2 text-white hover:bg-white hover:text-black ease-in transition"
           >
             Explore Diamond Rings

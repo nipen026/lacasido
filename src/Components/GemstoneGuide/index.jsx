@@ -68,7 +68,7 @@ const GemstoneGuide = () => {
       </div>
         <div className="flex justify-center w-full mt-20">
           <button
-            onClick={() => navigate('/contactus')}
+            onClick={() => navigate('/productListing?latest=true')}
             className="border border-black font-semibold px-6 py-2 text-black hover:bg-black hover:text-white ease-in transition"
           >
             Explore Diamonds
