@@ -153,7 +153,14 @@ const NewArrivals = () => {
 
 
         {/* ===== Products Grid ===== */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {/* ===== Products Grid ===== */}
+        <div
+          className={`gap-6 ${visibleProducts.length > 0 && visibleProducts.length < 4
+              ? "flex justify-center flex-wrap"
+              : "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+            }`}
+        >
+
           {visibleProducts.length === 0 && (
             <p className="col-span-4 text-center text-gray-500">
               No products found.
@@ -165,7 +172,10 @@ const NewArrivals = () => {
             if (images.length === 0) return null;
 
             return (
-              <div key={product.id} className="group relative overflow-hidden">
+              <div
+                key={product.id}
+                className="group relative overflow-hidden w-full sm:w-[280px]"
+              >
                 <div
                   className="relative w-full h-72 cursor-pointer overflow-hidden"
                   onClick={() => {
