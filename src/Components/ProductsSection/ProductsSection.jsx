@@ -1,7 +1,7 @@
 import React from "react";
-import img1 from "../../assets/23.jpg";
-import img2 from "../../assets/24.jpg";
-import img3 from "../../assets/25.jpg";
+import img1 from "../../assets/img-2.jpeg";
+import img2 from "../../assets/img-7.jpeg";
+import img3 from "../../assets/img-6.jpeg";
 
 const ProductsSection = () => {
     return (
@@ -16,7 +16,7 @@ const ProductsSection = () => {
                         alt="Hand Jewelry"
                         className="w-full h-[400px] object-cover rounded-2xl shadow"
                     />
-                    <div className="absolute inset-0 bg-white opacity-40 rounded-2xl"></div>
+                    <div className="absolute inset-0 bg-black opacity-10 rounded-2xl"></div>
                 </div>
 
                 {/* IMAGE 2 */}
@@ -26,7 +26,7 @@ const ProductsSection = () => {
                         alt="Hand Jewelry"
                         className="w-full h-[400px] object-cover rounded-2xl shadow"
                     />
-                    <div className="absolute inset-0 bg-white opacity-40 rounded-2xl"></div>
+                    <div className="absolute inset-0 bg-black opacity-10 rounded-2xl"></div>
                 </div>
 
                 {/* IMAGE 3 */}
@@ -36,7 +36,7 @@ const ProductsSection = () => {
                         alt="Hand Jewelry"
                         className="w-full h-[400px] object-cover rounded-2xl shadow"
                     />
-                    <div className="absolute inset-0 bg-white opacity-40 rounded-2xl"></div>
+                    <div className="absolute inset-0 bg-black opacity-10 rounded-2xl"></div>
                 </div>
 
             </div>

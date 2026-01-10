@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { GET_PRODUCT } from "../../api/get";
+import { GET_PRODUCT, GET_PRODUCT_TRENDING } from "../../api/get";
 import { FaChevronRight } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
@@ -26,7 +26,7 @@ const NewArrivals = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await GET_PRODUCT();
+        const res = await GET_PRODUCT_TRENDING();
         setAllProducts(res.data?.data || []);
       } catch (err) {
         console.error("Failed to load products", err);

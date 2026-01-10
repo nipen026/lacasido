@@ -1,7 +1,7 @@
 import Footer from "../../Common/Footer";
 import Header from "../../Common/Header";
 import Banner from "../../Components/Banner";
-import Categories from "../../Components/Categories";
+
 import FooterBanner from "../../Components/Footerbanner";
 import GemstoneGuide from "../../Components/GemstoneGuide";
 // import FeaturedCategories from "../../Components/FeaturedCategories";

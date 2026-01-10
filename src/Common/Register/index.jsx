@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
 import axios from 'axios';
-import loginBg from '../../assets/login.jpg';
+// import loginBg from '../../assets/login.jpg';
 import { FaEye } from 'react-icons/fa';
 import { FaEyeLowVision } from 'react-icons/fa6';
 import { REGISTER } from '../../api/post';
@@ -47,7 +47,7 @@ const Register = () => {
     return (
         <div className="flex min-h-screen">
             {/* Left Banner */}
-            <div className="w-1/2 bg-cover hidden md:block" style={{ backgroundImage: `url(${loginBg})` }}>
+            <div className="w-1/2 bg-cover hidden md:block" >
                 <div className="bg-black bg-opacity-40 h-full flex flex-col items-center justify-center text-center px-4">
                     <h1 className="text-white text-5xl font-extrabold mb-4 animate-typing whitespace-nowrap overflow-hidden">
                         Join Vigo<span className='text-yellow'>&nbsp;Bee</span>

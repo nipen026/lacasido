@@ -12,6 +12,15 @@ export const GET_PRODUCT = () => {
   });
 };
 
+export const GET_PRODUCT_TRENDING = () => {
+  return new Promise((resolve, reject) => {
+    axios
+      .get(`${base_url}/api/products/trending`)
+      .then((res) => resolve(res))
+      .catch((err) => reject(err));
+  });
+};
+
 export const GET_PRODUCT_BY_ID = (id) => {
   return new Promise((resolve, reject) => {
     axios
